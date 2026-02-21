@@ -4,483 +4,76 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ma Bibliothèque – Ensemble vers la lumière</title>
+<meta name="theme-color" content="#c9a227">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ma Bibliothèque">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Communauté numérique et espace d'apprentissage collaboratif. Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #0f0a00;
-    --parchment: #f5f0e8;
-    --gold: #c9a227;
-    --gold-light: #e8c84a;
-    --rust: #8b2e00;
-    --deep: #1a0f00;
-    --cream: #faf7f0;
-    --shadow-gold: rgba(201,162,39,0.15);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--ink);
-    color: var(--parchment);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    overflow-x: hidden;
-  }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    text-align: center;
-    padding: 3rem 2rem;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,162,39,0.07) 0%, transparent 70%),
-      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,162,39,0.03) 60px, rgba(201,162,39,0.03) 61px),
-      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,162,39,0.03) 60px, rgba(201,162,39,0.03) 61px),
-      var(--ink);
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    opacity: 0.4;
-    pointer-events: none;
-  }
-
-  .hero-ornament {
-    font-size: 2rem;
-    color: var(--gold);
-    letter-spacing: .3em;
-    animation: fadeDown .8s ease both;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 10vw, 7rem);
-    font-weight: 900;
-    line-height: 1;
-    animation: fadeDown .8s ease .15s both;
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero-title em {
-    font-style: italic;
-    font-weight: 400;
-    display: block;
-    font-size: 60%;
-    -webkit-text-fill-color: var(--parchment);
-    color: var(--parchment);
-    letter-spacing: .1em;
-  }
-
-  .hero-slogan {
-    font-style: italic;
-    font-weight: 300;
-    font-size: clamp(1rem, 2.5vw, 1.4rem);
-    color: rgba(245,240,232,0.7);
-    max-width: 600px;
-    margin: 1.5rem auto;
-    line-height: 1.7;
-    animation: fadeDown .8s ease .3s both;
-    border-left: 2px solid var(--gold);
-    border-right: 2px solid var(--gold);
-    padding: 0 1rem;
-  }
-
-  .hero-cta {
-    display: inline-block;
-    margin-top: 2.5rem;
-    padding: .8rem 2.5rem;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    font-family: 'Space Mono', monospace;
-    font-size: .8rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: all .3s;
-    animation: fadeDown .8s ease .45s both;
-  }
-
-  .hero-cta:hover {
-    background: var(--gold);
-    color: var(--ink);
-  }
-
-  .scroll-hint {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--gold);
-    font-size: .7rem;
-    font-family: 'Space Mono', monospace;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    animation: bounce 2s infinite;
-  }
-
-  /* ── SECTIONS ── */
-  section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
-
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: .7rem;
-    letter-spacing: .3em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--gold), transparent);
-  }
-
-  h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 700;
-    color: var(--parchment);
-    line-height: 1.15;
-    margin-bottom: 2.5rem;
-  }
-
-  h2 span { color: var(--gold); }
-
-  /* ── MISSION ── */
-  .mission {
-    background:
-      linear-gradient(135deg, rgba(201,162,39,0.05) 0%, transparent 60%),
-      var(--deep);
-    border: 1px solid rgba(201,162,39,0.15);
-    border-radius: 2px;
-    padding: 4rem 3rem;
-    max-width: 1100px;
-    margin: 0 auto 0;
-    position: relative;
-  }
-
-  .mission::before {
-    content: '❝';
-    position: absolute;
-    top: -1.5rem;
-    left: 3rem;
-    font-size: 5rem;
-    color: var(--gold);
-    opacity: .2;
-    font-family: Georgia, serif;
-    line-height: 1;
-  }
-
-  .mission-items {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .mission-item {
-    padding: 1.5rem;
-    border-left: 2px solid var(--gold);
-    transition: background .3s;
-  }
-
-  .mission-item:hover { background: rgba(201,162,39,0.05); }
-
-  .mission-item p {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: rgba(245,240,232,0.8);
-    font-style: italic;
-  }
-
-  /* ── ESPACES ── */
-  .espaces-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
-  }
-
-  .espace-card {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(201,162,39,0.12);
-    padding: 2rem 1.5rem;
-    transition: all .4s cubic-bezier(.175,.885,.32,1.275);
-    cursor: default;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .espace-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 0; height: 2px;
-    background: var(--gold);
-    transition: width .4s;
-  }
-
-  .espace-card:hover {
-    border-color: rgba(201,162,39,0.4);
-    background: rgba(201,162,39,0.04);
-    transform: translateY(-4px);
-  }
-
-  .espace-card:hover::after { width: 100%; }
-
-  .espace-icon {
-    font-size: 1.8rem;
-    display: block;
-    margin-bottom: 1rem;
-  }
-
-  .espace-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--gold);
-    margin-bottom: .5rem;
-  }
-
-  .espace-desc {
-    font-size: .9rem;
-    color: rgba(245,240,232,0.55);
-    font-style: italic;
-  }
-
-  /* ── ACTIVITÉS ── */
-  .activities-full {
-    background: var(--deep);
-    border: 1px solid rgba(201,162,39,0.12);
-    padding: 4rem 2rem;
-  }
-
-  .activities-full section { padding: 0; }
-
-  .act-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    margin-top: 1rem;
-  }
-
-  .act-item {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1.2rem 1.5rem;
-    border: 1px solid rgba(201,162,39,0.08);
-    transition: all .3s;
-  }
-
-  .act-item:hover {
-    border-color: var(--gold);
-    background: rgba(201,162,39,0.04);
-  }
-
-  .act-icon { font-size: 1.5rem; flex-shrink: 0; }
-
-  .act-text { font-size: 1rem; color: rgba(245,240,232,0.8); }
-
-  /* ── VALEURS ── */
-  .valeurs-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1rem;
-    justify-content: center;
-  }
-
-  .valeur-pill {
-    display: flex;
-    align-items: center;
-    gap: .6rem;
-    padding: .7rem 1.5rem;
-    border: 1px solid rgba(201,162,39,0.25);
-    font-family: 'Space Mono', monospace;
-    font-size: .75rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--gold);
-    transition: all .3s;
-  }
-
-  .valeur-pill:hover {
-    background: var(--gold);
-    color: var(--ink);
-    transform: scale(1.05);
-  }
-
-  /* ── PUBLIC ── */
-  .public-section { text-align: center; }
-
-  .public-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .8rem;
-    justify-content: center;
-    margin-top: 1.5rem;
-  }
-
-  .public-tag {
-    padding: .5rem 1.2rem;
-    background: rgba(201,162,39,0.08);
-    border: 1px solid rgba(201,162,39,0.2);
-    font-style: italic;
-    font-size: 1rem;
-    color: rgba(245,240,232,0.7);
-    transition: all .3s;
-  }
-
-  .public-tag:hover {
-    background: rgba(201,162,39,0.15);
-    color: var(--parchment);
-  }
-
-  /* ── CONTACT ── */
-  .contact-section {
-    background: 
-      radial-gradient(ellipse 60% 80% at 50% 50%, rgba(201,162,39,0.07) 0%, transparent 70%),
-      var(--deep);
-    border: 1px solid rgba(201,162,39,0.15);
-    padding: 5rem 2rem;
-    text-align: center;
-  }
-
-  .contact-section section { padding: 0; }
-
-  .contact-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    justify-content: center;
-    margin-top: 2.5rem;
-  }
-
-  .contact-link {
-    display: flex;
-    align-items: center;
-    gap: .8rem;
-    padding: 1rem 2rem;
-    border: 1px solid rgba(201,162,39,0.25);
-    text-decoration: none;
-    color: var(--parchment);
-    font-family: 'Space Mono', monospace;
-    font-size: .75rem;
-    letter-spacing: .1em;
-    transition: all .3s;
-  }
-
-  .contact-link:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(201,162,39,0.1);
-  }
-
-  .contact-icon { font-size: 1.2rem; }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid rgba(201,162,39,0.12);
-    padding: 2rem;
-    text-align: center;
-    font-size: .8rem;
-    color: rgba(245,240,232,0.3);
-    font-family: 'Space Mono', monospace;
-    letter-spacing: .1em;
-  }
-
-  footer span { color: var(--gold); }
-
-  /* ── DIVIDER ── */
-  .divider {
-    max-width: 1100px;
-    margin: 0 auto;
-    border: none;
-    border-top: 1px solid rgba(201,162,39,0.08);
-  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(8px); }
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(15,10,0,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(201,162,39,0.1);
-  }
-
-  .nav-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--gold);
-    text-decoration: none;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: .65rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: rgba(245,240,232,0.5);
-    text-decoration: none;
-    transition: color .3s;
-  }
-
-  .nav-links a:hover { color: var(--gold); }
-
-  @media (max-width: 600px) {
-    .nav-links { display: none; }
-    .mission { padding: 2.5rem 1.5rem; }
-    section { padding: 3rem 1.2rem; }
-  }
+:root{--ink:#0f0a00;--parchment:#f5f0e8;--gold:#c9a227;--gold-light:#e8c84a;--deep:#1a0f00}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--parchment);font-family:'Cormorant Garamond',serif;font-size:18px;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(15,10,0,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,162,39,0.1)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold);text-decoration:none}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,0.5);text-decoration:none;transition:color .3s}
+.nav-links a:hover{color:var(--gold)}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;text-align:center;padding:3rem 2rem;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(201,162,39,0.07) 0%,transparent 70%),var(--ink)}
+.hero-ornament{font-size:2rem;color:var(--gold);letter-spacing:.3em;animation:fadeDown .8s ease both;margin-bottom:1.5rem}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,10vw,7rem);font-weight:900;line-height:1;animation:fadeDown .8s ease .15s both;background:linear-gradient(135deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-title em{font-style:italic;font-weight:400;display:block;font-size:60%;-webkit-text-fill-color:var(--parchment);color:var(--parchment);letter-spacing:.1em}
+.hero-slogan{font-style:italic;font-weight:300;font-size:clamp(1rem,2.5vw,1.4rem);color:rgba(245,240,232,0.7);max-width:600px;margin:1.5rem auto;line-height:1.7;animation:fadeDown .8s ease .3s both;border-left:2px solid var(--gold);border-right:2px solid var(--gold);padding:0 1rem}
+.hero-cta{display:inline-block;margin-top:2.5rem;padding:.8rem 2.5rem;border:1px solid var(--gold);color:var(--gold);font-family:'Space Mono',monospace;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:all .3s;animation:fadeDown .8s ease .45s both}
+.hero-cta:hover{background:var(--gold);color:var(--ink)}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:var(--gold);font-size:.7rem;font-family:'Space Mono',monospace;letter-spacing:.2em;text-transform:uppercase;animation:bounce 2s infinite}
+section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+.section-label{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:1rem}
+.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--gold),transparent)}
+h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;color:var(--parchment);line-height:1.15;margin-bottom:2.5rem}
+h2 span{color:var(--gold)}
+.mission{background:linear-gradient(135deg,rgba(201,162,39,0.05) 0%,transparent 60%),var(--deep);border:1px solid rgba(201,162,39,0.15);padding:4rem 3rem;max-width:1100px;margin:0 auto;position:relative}
+.mission::before{content:'❝';position:absolute;top:-1.5rem;left:3rem;font-size:5rem;color:var(--gold);opacity:.2;font-family:Georgia,serif;line-height:1}
+.mission-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;margin-top:2rem}
+.mission-item{padding:1.5rem;border-left:2px solid var(--gold);transition:background .3s}
+.mission-item:hover{background:rgba(201,162,39,0.05)}
+.mission-item p{font-size:1rem;line-height:1.7;color:rgba(245,240,232,0.8);font-style:italic}
+.espaces-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;margin-top:1rem}
+.espace-card{background:rgba(255,255,255,0.02);border:1px solid rgba(201,162,39,0.12);padding:2rem 1.5rem;transition:all .4s;cursor:default;position:relative;overflow:hidden}
+.espace-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gold);transition:width .4s}
+.espace-card:hover{border-color:rgba(201,162,39,0.4);background:rgba(201,162,39,0.04);transform:translateY(-4px)}
+.espace-card:hover::after{width:100%}
+.espace-icon{font-size:1.8rem;display:block;margin-bottom:1rem}
+.espace-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--gold);margin-bottom:.5rem}
+.espace-desc{font-size:.9rem;color:rgba(245,240,232,0.55);font-style:italic}
+.activities-bg{background:var(--deep);border:1px solid rgba(201,162,39,0.12);padding:4rem 2rem}
+.act-list{display:flex;flex-direction:column;gap:1.2rem;margin-top:1rem}
+.act-item{display:flex;align-items:center;gap:1.5rem;padding:1.2rem 1.5rem;border:1px solid rgba(201,162,39,0.08);transition:all .3s}
+.act-item:hover{border-color:var(--gold);background:rgba(201,162,39,0.04)}
+.act-icon{font-size:1.5rem;flex-shrink:0}
+.act-text{font-size:1rem;color:rgba(245,240,232,0.8)}
+.valeurs-row{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1rem;justify-content:center}
+.valeur-pill{display:flex;align-items:center;gap:.6rem;padding:.7rem 1.5rem;border:1px solid rgba(201,162,39,0.25);font-family:'Space Mono',monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);transition:all .3s}
+.valeur-pill:hover{background:var(--gold);color:var(--ink);transform:scale(1.05)}
+.public-tags{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:1.5rem}
+.public-tag{padding:.5rem 1.2rem;background:rgba(201,162,39,0.08);border:1px solid rgba(201,162,39,0.2);font-style:italic;font-size:1rem;color:rgba(245,240,232,0.7);transition:all .3s}
+.public-tag:hover{background:rgba(201,162,39,0.15);color:var(--parchment)}
+.contact-bg{background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(201,162,39,0.07) 0%,transparent 70%),var(--deep);border:1px solid rgba(201,162,39,0.15);padding:5rem 2rem;text-align:center}
+.contact-links{display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:center;margin-top:2.5rem}
+.contact-link{display:flex;align-items:center;gap:.8rem;padding:1rem 2rem;border:1px solid rgba(201,162,39,0.25);text-decoration:none;color:var(--parchment);font-family:'Space Mono',monospace;font-size:.75rem;letter-spacing:.1em;transition:all .3s}
+.contact-link:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px);box-shadow:0 10px 30px rgba(201,162,39,0.1)}
+footer{border-top:1px solid rgba(201,162,39,0.12);padding:2rem;text-align:center;font-size:.8rem;color:rgba(245,240,232,0.3);font-family:'Space Mono',monospace;letter-spacing:.1em}
+footer span{color:var(--gold)}
+.divider{max-width:1100px;margin:0 auto;border:none;border-top:1px solid rgba(201,162,39,0.08)}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+@media(max-width:600px){.nav-links{display:none}.mission{padding:2.5rem 1.5rem}section{padding:3rem 1.2rem}}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a class="nav-logo" href="#">Ma Bibliothèque</a>
   <ul class="nav-links">
@@ -491,126 +84,63 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-ornament">✦ ✦ ✦</div>
-  <h1 class="hero-title">
-    Ma<br>
-    <em>Bibliothèque</em>
-  </h1>
-  <p class="hero-slogan">
-    « Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science »
-  </p>
+  <h1 class="hero-title">Ma<br><em>Bibliothèque</em></h1>
+  <p class="hero-slogan">« Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science »</p>
   <a class="hero-cta" href="#mission">Découvrir la communauté</a>
   <div class="scroll-hint">↓ explorer</div>
 </div>
 
-<!-- MISSION -->
-<div id="mission" style="background: var(--deep); padding: 5rem 2rem;">
+<div id="mission" style="background:var(--deep);padding:5rem 2rem;">
   <div class="mission">
     <div class="section-label">Notre raison d'être</div>
     <h2>Une mission,<br><span>trois engagements</span></h2>
     <div class="mission-items">
-      <div class="mission-item">
-        <p>Promouvoir la lecture régulière et agréable comme fondement de l'épanouissement personnel.</p>
-      </div>
-      <div class="mission-item">
-        <p>Créer un cadre d'échanges intellectuels autour de thèmes variés : éducation, société, culture, sciences, actualités.</p>
-      </div>
-      <div class="mission-item">
-        <p>Favoriser l'apprentissage continu chez les élèves, étudiants et tous les passionnés du savoir.</p>
-      </div>
+      <div class="mission-item"><p>Promouvoir la lecture régulière et agréable comme fondement de l'épanouissement personnel.</p></div>
+      <div class="mission-item"><p>Créer un cadre d'échanges intellectuels autour de thèmes variés : éducation, société, culture, sciences, actualités.</p></div>
+      <div class="mission-item"><p>Favoriser l'apprentissage continu chez les élèves, étudiants et tous les passionnés du savoir.</p></div>
     </div>
   </div>
 </div>
 
 <hr class="divider">
 
-<!-- ESPACES -->
-<div id="espaces" style="padding: 5rem 2rem;">
+<div id="espaces" style="padding:5rem 2rem;">
   <section style="padding:0">
     <div class="section-label">Nos lieux de vie</div>
     <h2>Les <span>espaces</span><br>de la communauté</h2>
     <div class="espaces-grid">
-      <div class="espace-card">
-        <span class="espace-icon">📚</span>
-        <div class="espace-name">Au bonheur des lecteurs</div>
-        <div class="espace-desc">Lectures partagées et coups de cœur littéraires</div>
-      </div>
-      <div class="espace-card">
-        <span class="espace-icon">🔎</span>
-        <div class="espace-name">L'Agora des curieux</div>
-        <div class="espace-desc">Débats ouverts et réflexions collectives</div>
-      </div>
-      <div class="espace-card">
-        <span class="espace-icon">☕</span>
-        <div class="espace-name">Le Salon des lecteurs</div>
-        <div class="espace-desc">Discussions libres et interactives</div>
-      </div>
-      <div class="espace-card">
-        <span class="espace-icon">🏡</span>
-        <div class="espace-name">La Maison des mots</div>
-        <div class="espace-desc">Expression écrite et création personnelle</div>
-      </div>
-      <div class="espace-card">
-        <span class="espace-icon">🌐</span>
-        <div class="espace-name">Librairie des perspectives mondiales</div>
-        <div class="espace-desc">Ouverture sur l'actualité internationale</div>
-      </div>
-      <div class="espace-card">
-        <span class="espace-icon">🎤</span>
-        <div class="espace-name">Les Voix du Slam</div>
-        <div class="espace-desc">Performances orales et poésie vivante</div>
-      </div>
-      <div class="espace-card">
-        <span class="espace-icon">⚡</span>
-        <div class="espace-name">Atelier éclair de savoir</div>
-        <div class="espace-desc">Découvertes rapides et capsules de connaissance</div>
-      </div>
-      <div class="espace-card">
-        <span class="espace-icon">✍️</span>
-        <div class="espace-name">L'Atelier des écrivains</div>
-        <div class="espace-desc">Accompagnement et création littéraire</div>
-      </div>
+      <div class="espace-card"><span class="espace-icon">📚</span><div class="espace-name">Au bonheur des lecteurs</div><div class="espace-desc">Lectures partagées et coups de cœur littéraires</div></div>
+      <div class="espace-card"><span class="espace-icon">🔎</span><div class="espace-name">L'Agora des curieux</div><div class="espace-desc">Débats ouverts et réflexions collectives</div></div>
+      <div class="espace-card"><span class="espace-icon">☕</span><div class="espace-name">Le Salon des lecteurs</div><div class="espace-desc">Discussions libres et interactives</div></div>
+      <div class="espace-card"><span class="espace-icon">🏡</span><div class="espace-name">La Maison des mots</div><div class="espace-desc">Expression écrite et création personnelle</div></div>
+      <div class="espace-card"><span class="espace-icon">🌐</span><div class="espace-name">Librairie des perspectives mondiales</div><div class="espace-desc">Ouverture sur l'actualité internationale</div></div>
+      <div class="espace-card"><span class="espace-icon">🎤</span><div class="espace-name">Les Voix du Slam</div><div class="espace-desc">Performances orales et poésie vivante</div></div>
+      <div class="espace-card"><span class="espace-icon">⚡</span><div class="espace-name">Atelier éclair de savoir</div><div class="espace-desc">Découvertes rapides et capsules de connaissance</div></div>
+      <div class="espace-card"><span class="espace-icon">✍️</span><div class="espace-name">L'Atelier des écrivains</div><div class="espace-desc">Accompagnement et création littéraire</div></div>
     </div>
   </section>
 </div>
 
-<!-- ACTIVITÉS -->
-<div id="activites" class="activities-full">
-  <section>
+<div id="activites" class="activities-bg">
+  <section style="padding:0;max-width:1100px;margin:0 auto;">
     <div class="section-label">Ce que nous faisons</div>
     <h2>Activités<br><span>principales</span></h2>
     <div class="act-list">
-      <div class="act-item">
-        <span class="act-icon">📅</span>
-        <span class="act-text">Rencontres hebdomadaires en ligne et parfois en présentiel</span>
-      </div>
-      <div class="act-item">
-        <span class="act-icon">📖</span>
-        <span class="act-text">Cercles de lecture gratuits ouverts à tous</span>
-      </div>
-      <div class="act-item">
-        <span class="act-icon">💬</span>
-        <span class="act-text">Débats et panels sur des thèmes d'actualité</span>
-      </div>
-      <div class="act-item">
-        <span class="act-icon">📚</span>
-        <span class="act-text">Partage de résumés de livres et d'articles</span>
-      </div>
-      <div class="act-item">
-        <span class="act-icon">✍️</span>
-        <span class="act-text">Production de textes originaux par les membres</span>
-      </div>
+      <div class="act-item"><span class="act-icon">📅</span><span class="act-text">Rencontres hebdomadaires en ligne et parfois en présentiel</span></div>
+      <div class="act-item"><span class="act-icon">📖</span><span class="act-text">Cercles de lecture gratuits ouverts à tous</span></div>
+      <div class="act-item"><span class="act-icon">💬</span><span class="act-text">Débats et panels sur des thèmes d'actualité</span></div>
+      <div class="act-item"><span class="act-icon">📚</span><span class="act-text">Partage de résumés de livres et d'articles</span></div>
+      <div class="act-item"><span class="act-icon">✍️</span><span class="act-text">Production de textes originaux par les membres</span></div>
     </div>
   </section>
 </div>
 
 <hr class="divider">
 
-<!-- PUBLIC & VALEURS -->
-<div style="padding: 5rem 2rem;">
-  <section class="public-section" style="padding:0; margin-bottom:5rem;">
+<div style="padding:5rem 2rem;">
+  <section style="padding:0;margin-bottom:5rem;text-align:center;">
     <div class="section-label">Qui peut nous rejoindre</div>
     <h2>Notre <span>public</span></h2>
     <div class="public-tags">
@@ -621,8 +151,7 @@
       <div class="public-tag">Curieux du monde</div>
     </div>
   </section>
-
-  <section style="padding:0; text-align:center;">
+  <section style="padding:0;text-align:center;">
     <div class="section-label">Ce en quoi nous croyons</div>
     <h2>Nos <span>valeurs</span></h2>
     <div class="valeurs-row">
@@ -635,51 +164,42 @@
   </section>
 </div>
 
-<!-- CONTACT -->
-<div id="contact" class="contact-section">
-  <section>
+<div id="contact" class="contact-bg">
+  <section style="padding:0;max-width:700px;margin:0 auto;">
     <div class="section-label">Nous rejoindre</div>
     <h2>Entrons en<br><span>contact</span></h2>
-    <p style="color:rgba(245,240,232,0.6); font-style:italic; max-width:500px; margin:0 auto;">
-      Rejoignez une communauté de passionnés. Chaque voix compte, chaque lecteur apporte sa lumière.
-    </p>
+    <p style="color:rgba(245,240,232,0.6);font-style:italic;">Rejoignez une communauté de passionnés. Chaque voix compte, chaque lecteur apporte sa lumière.</p>
     <div class="contact-links">
-      <a class="contact-link" href="https://wa.me/224623268119" target="_blank">
-        <span class="contact-icon">📱</span> WhatsApp · +224 623 26 81 19
-      </a>
-      <a class="contact-link" href="https://www.facebook.com/alhassane.barry.977325" target="_blank">
-        <span class="contact-icon">🌐</span> Facebook
-      </a>
-      <a class="contact-link" href="mailto:alhassanebarryninewills9@gmail.com">
-        <span class="contact-icon">📧</span> Email
-      </a>
+      <a class="contact-link" href="https://wa.me/224623268119" target="_blank"><span>📱</span> WhatsApp · +224 623 26 81 19</a>
+      <a class="contact-link" href="https://www.facebook.com/alhassane.barry.977325" target="_blank"><span>🌐</span> Facebook</a>
+      <a class="contact-link" href="/cdn-cgi/l/email-protection#40212c28213333212e2522213232392e292e2537292c2c337900272d21292c6e232f2d"><span>📧</span> Email</a>
     </div>
   </section>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <span>Ma Bibliothèque</span> · Communauté numérique d'apprentissage collaboratif<br>
   <small>« Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science »</small>
 </footer>
 
-<script>
-  // Intersection Observer for fade-in
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.espace-card, .act-item, .mission-item, .valeur-pill, .public-tag, .contact-link').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity .6s ease, transform .6s ease, border-color .3s, background .3s, color .3s';
-    observer.observe(el);
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Fix navigation pour mobile
+document.querySelectorAll("a[href^="#"]").forEach(anchor => {
+  anchor.addEventListener("click", function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute("href"));
+    if(target) target.scrollIntoView({behavior: "smooth", block: "start"});
   });
-</script>
-</body>
-</html>
+});
+
+// Animations au scroll
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+  });
+}, {threshold: 0.1});
+
+document.querySelectorAll('.espace-card,.act-item,.mission-item,.valeur-pill,.public-tag,.contact-link').forEach((el,i) => {
+  el.style.opacity='0';
+  el.style.transform='translateY(20px)';
+  el.style.
