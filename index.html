@@ -1,17 +1,15 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ma Bibliothèque – Ensemble vers la lumière</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-  
+  <!-- Firebase (Auth seulement) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
   <script>
-    // 🔁 REMPLACEZ CES VALEURS PAR LES VÔTRES DEPUIS FIREBASE
+    // 🔁 REMPLACEZ CES XXXXX PAR VOS VRAIES VALEURS
     const firebaseConfig = {
       apiKey: "XXXXX",
       authDomain: "XXXXX",
@@ -22,171 +20,176 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const db = firebase.firestore();
   </script>
-
   <style>
-    :root {
-      --ink: #0f0a00;
-      --parchment: #f5f0e8;
-      --gold: #c9a227;
-      --gold-light: #e8c84a;
-      --rust: #8b2e00;
-      --deep: #1a0f00;
-      --cream: #faf7f0;
-      --shadow-gold: rgba(201,162,39,0.15);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--ink);
-      color: var(--parchment);
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 18px;
-      overflow-x: hidden;
-    }
-
-    /* NAV FIXE */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(15,10,0,0.9);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(201,162,39,0.1);
-    }
-    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { font-family: 'Space Mono', monospace; font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(245,240,232,0.5); text-decoration: none; transition: color .3s; }
-    .nav-links a:hover { color: var(--gold); }
-
-    /* HERO */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      text-align: center;
-      padding: 3rem 2rem;
-      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,162,39,0.07) 0%, transparent 70%), var(--ink);
-    }
-    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 1; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero-slogan { font-style: italic; font-weight: 300; font-size: 1.2rem; color: rgba(245,240,232,0.7); max-width: 600px; margin: 1.5rem auto; border-left: 2px solid var(--gold); border-right: 2px solid var(--gold); padding: 0 1rem; }
-    
-    .hero-cta { display: inline-block; margin-top: 2.5rem; padding: .8rem 2.5rem; border: 1px solid var(--gold); color: var(--gold); font-family: 'Space Mono', monospace; font-size: .8rem; text-decoration: none; transition: all .3s; }
-    .hero-cta:hover { background: var(--gold); color: var(--ink); }
-
-    /* SECTIONS */
-    section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
-    .section-label { font-family: 'Space Mono', monospace; font-size: .7rem; letter-spacing: .3em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
-    .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--gold), transparent); }
-    h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--parchment); margin-bottom: 2.5rem; }
-    h2 span { color: var(--gold); }
-
-    /* GRILLES ET CARTES */
-    .espaces-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
-    .espace-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(201,162,39,0.12); padding: 2rem 1.5rem; }
-    .espace-name { color: var(--gold); font-weight: bold; margin-bottom: 0.5rem; }
-
-    /* AUTH & MEMBRES */
-    .auth-section { background: var(--deep); padding: 5rem 2rem; text-align: center; }
-    .auth-section input { width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(201,162,39,0.3); color: white; }
-    .auth-section button { width: 100%; padding: 1rem; border: 1px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; }
-    .auth-section button:hover { background: var(--gold); color: var(--ink); }
-
-    footer { padding: 3rem; text-align: center; border-top: 1px solid rgba(201,162,39,0.1); color: gray; }
-
-    @media (max-width: 600px) { .nav-links { display: none; } }
+    /* Tous vos styles restent identiques (je ne les recopie pas pour gagner de la place, mais vous devez les laisser) */
+    /* ... (vos styles existants) ... */
   </style>
 </head>
 <body>
+  <!-- Tout votre HTML reste identique jusqu'à la section AUTH -->
+  <!-- ... (votre code HTML existant) ... -->
 
-  <nav>
-    <a class="nav-logo" href="#accueil">Ma Bibliothèque</a>
-    <ul class="nav-links">
-      <li><a href="#mission">Mission</a></li>
-      <li><a href="#espaces">Espaces</a></li>
-      <li><a href="#activites">Activités</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="#auth">Espace membre</a></li>
-    </ul>
-  </nav>
-
-  <div class="hero" id="accueil">
-    <h1 class="hero-title">Ma<br><em>Bibliothèque</em></h1>
-    <p class="hero-slogan">« Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science »</p>
-    <a class="hero-cta" href="#mission">Découvrir la communauté</a>
-  </div>
-
-  <section id="mission">
-    <div class="section-label">Notre raison d'être</div>
-    <h2>Une mission,<br><span>trois engagements</span></h2>
-    <p>Promouvoir la lecture, créer des échanges intellectuels et favoriser l'apprentissage continu.</p>
-  </section>
-
-  <section id="espaces">
-    <div class="section-label">Nos lieux de vie</div>
-    <div class="espaces-grid">
-      <div class="espace-card"><div class="espace-name">📚 Au bonheur des lecteurs</div><div class="espace-desc">Lectures partagées</div></div>
-      <div class="espace-card"><div class="espace-name">🔎 L'Agora des curieux</div><div class="espace-desc">Débats ouverts</div></div>
-      <div class="espace-card"><div class="espace-name">☕ Le Salon des lecteurs</div><div class="espace-desc">Discussions libres</div></div>
-    </div>
-  </section>
-
-  <section id="activites" style="background: var(--deep);">
-    <div class="section-label">Ce que nous faisons</div>
-    <h2>Activités principales</h2>
-    <ul>
-      <li>Rencontres hebdomadaires</li>
-      <li>Cercles de lecture gratuits</li>
-      <li>Débats et panels</li>
-    </ul>
-  </section>
-
-  <section id="contact">
-    <div class="section-label">Contact</div>
-    <div style="display:flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
-        <a href="https://wa.me/224623268119" style="color:var(--gold); text-decoration:none;">WhatsApp</a>
-        <a href="mailto:alhassanebarryninewills9@gmail.com" style="color:var(--gold); text-decoration:none;">Email</a>
-    </div>
-  </section>
-
-  <section id="auth" class="auth-section">
+  <!-- AUTH SECTION (simplifiée) -->
+  <div id="auth" class="auth-section">
+    <section style="max-width: 500px; margin: 0 auto;">
       <div id="nonConnecte">
-        <h2><span>Inscription / Connexion</span></h2>
+        <div class="section-label">Espace membre</div>
+        <h2><span id="formTitle">Inscription</span></h2>
         <div id="inscriptionForm">
-            <input type="text" id="nom" placeholder="Nom">
-            <input type="text" id="prenom" placeholder="Prénom">
-            <input type="email" id="email" placeholder="E-mail">
-            <input type="password" id="password" placeholder="Mot de passe">
-            <button id="create-btn">S'INSCRIRE</button>
+          <form id="inscription-form">
+            <div style="display: flex; gap: 1rem;">
+              <input type="text" id="nom" placeholder="Nom" required>
+              <input type="text" id="prenom" placeholder="Prénom" required>
+            </div>
+            <input type="email" id="email" placeholder="E-mail" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+            <input type="password" id="confirm-password" placeholder="Confirmer mot de passe" required>
+            <button type="button" id="create-btn">CRÉATEUR</button>
+          </form>
+        </div>
+        <div id="connexionForm" style="display: none;">
+          <form id="login-form">
+            <input type="email" id="login-email" placeholder="E-mail" required>
+            <input type="password" id="login-password" placeholder="Mot de passe" required>
+            <button type="button" id="login-btn">SE CONNECTER</button>
+          </form>
+        </div>
+        <span class="toggle-link" id="toggleForm">Déjà un compte ? Connectez-vous</span>
+      </div>
+
+      <div id="connecte" style="display: none;">
+        <div class="member-section">
+          <h3>Bienvenue dans votre espace</h3>
+          <p id="welcomeMessage"></p>
+          <button id="logout-btn">SE DÉCONNECTER</button>
         </div>
       </div>
-  </section>
+    </section>
+  </div>
 
+  <!-- FOOTER -->
   <footer>
-    <span>Ma Bibliothèque</span> · 2026
+    <span>Ma Bibliothèque</span> · Communauté numérique d'apprentissage collaboratif<br>
+    <small>« Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science »</small>
   </footer>
-IntersectionObserver((entries) => {
+
+  <!-- SCRIPTS simplifiés -->
+  <script>
+    // Intersection Observer (optionnel, à garder si vous voulez)
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           e.target.style.opacity = '1';
           e.target.style.transform = 'translateY(0)';
         }
       });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.espace-card, .act-item, .mission-item, .valeur-pill, .public-tag, .contact-link').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity .6s ease, transform .6s ease, border-color .3s, background .3s, color .3s';
+      observer.observe(el);
     });
 
-    document.querySelectorAll('section').forEach(s => {
-      s.style.opacity = '0';
-      s.style.transform = 'translateY(30px)';
-      s.style.transition = 'all 0.8s ease-out';
-      observer.observe(s);
+    // Éléments DOM pour l'authentification
+    const nonConnecte = document.getElementById('nonConnecte');
+    const connecte = document.getElementById('connecte');
+    const inscriptionForm = document.getElementById('inscriptionForm');
+    const connexionForm = document.getElementById('connexionForm');
+    const toggleLink = document.getElementById('toggleForm');
+    const formTitle = document.getElementById('formTitle');
+    const welcomeMsg = document.getElementById('welcomeMessage');
+
+    let isInscription = true;
+    toggleLink.addEventListener('click', () => {
+      isInscription = !isInscription;
+      if (isInscription) {
+        formTitle.textContent = 'Inscription';
+        inscriptionForm.style.display = 'block';
+        connexionForm.style.display = 'none';
+        toggleLink.textContent = 'Déjà un compte ? Connectez-vous';
+      } else {
+        formTitle.textContent = 'Connexion';
+        inscriptionForm.style.display = 'none';
+        connexionForm.style.display = 'block';
+        toggleLink.textContent = 'Pas encore de compte ? Inscrivez-vous';
+      }
+    });
+
+    // Observer l'état de connexion
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        nonConnecte.style.display = 'none';
+        connecte.style.display = 'block';
+        // On ne peut pas récupérer nom/prénom sans Firestore, on affiche juste l'email
+        welcomeMsg.textContent = `Bonjour ${user.email} ! Vous êtes connecté.`;
+      } else {
+        nonConnecte.style.display = 'block';
+        connecte.style.display = 'none';
+      }
+    });
+
+    // Inscription
+    document.getElementById('create-btn').addEventListener('click', function() {
+      const nom = document.getElementById('nom').value.trim();
+      const prenom = document.getElementById('prenom').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm-password').value;
+
+      if (!nom || !prenom || !email || !password || !confirm) {
+        alert('Veuillez remplir tous les champs.');
+        return;
+      }
+      if (password !== confirm) {
+        alert('Les mots de passe ne correspondent pas.');
+        return;
+      }
+      if (password.length < 6) {
+        alert('Le mot de passe doit contenir au moins 6 caractères.');
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          alert('Inscription réussie ! Bienvenue ' + prenom + ' ' + nom + ' !');
+          // Ici, on ne sauvegarde pas nom/prénom dans Firestore, donc ils ne seront pas conservés
+        })
+        .catch((error) => {
+          alert('Erreur : ' + error.message);
+        });
+    });
+
+    // Connexion
+    document.getElementById('login-btn').addEventListener('click', function() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!email || !password) {
+        alert('Veuillez remplir tous les champs.');
+        return;
+      }
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          alert('Connexion réussie !');
+        })
+        .catch((error) => {
+          alert('Erreur : ' + error.message);
+        });
+    });
+
+    // Déconnexion
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      auth.signOut()
+        .then(() => {
+          alert('Vous êtes déconnecté.');
+        })
+        .catch((error) => {
+          alert('Erreur : ' + error.message);
+        });
     });
   </script>
 </body>
