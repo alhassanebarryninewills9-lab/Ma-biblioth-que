@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ma Bibliothèque – Ensemble vers la lumière</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script>
+    // 🔁 REMPLACEZ CES XXXXX PAR VOS VRAIES VALEURS (copiées depuis Firebase)
+    const firebaseConfig = {
+      apiKey: "XXXXX",
+      authDomain: "XXXXX",
+      projectId: "XXXXX",
+      storageBucket: "XXXXX",
+      messagingSenderId: "XXXXX",
+      appId: "XXXXX"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <style>
     /* Vos styles existants (je les ai conservés intégralement) */
     :root {
@@ -589,7 +604,7 @@
 
   <!-- SCRIPTS -->
   <script>
-    // Intersection Observer pour animations (optionnel, mais je le garde)
+    // Intersection Observer pour animations (optionnel)
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -606,7 +621,7 @@
       observer.observe(el);
     });
 
-    // Gestionnaire du formulaire d'inscription (simulation)
+    // Gestionnaire du formulaire d'inscription avec Firebase
     document.getElementById('create-btn').addEventListener('click', function() {
       const nom = document.getElementById('nom').value.trim();
       const prenom = document.getElementById('prenom').value.trim();
@@ -627,17 +642,19 @@
         return;
       }
 
-      alert('Inscription réussie ! Bienvenue ' + prenom + ' ' + nom + ' !');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Création du compte avec Firebase
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Succès
+          alert('Inscription réussie ! Bienvenue ' + prenom + ' ' + nom + ' !');
+          // Vous pourriez aussi enregistrer le nom/prénom dans la base de données (optionnel)
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        })
+        .catch((error) => {
+          // Gestion des erreurs
+          alert('Erreur : ' + error.message);
+        });
     });
-
-    // Service Worker (si vous voulez la PWA)
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(err => console.log('ServiceWorker non enregistré', err));
-      });
-    }
   </script>
 </body>
-                                   </html>
-                                   
+  </html>
