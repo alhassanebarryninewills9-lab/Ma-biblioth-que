@@ -1,558 +1,373 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ma Bibliothèque – Communauté du savoir</title>
-<meta name="theme-color" content="#c9a227">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Ma Bibliothèque">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-:root{--ink:#0f0a00;--parchment:#f5f0e8;--gold:#c9a227;--gold-light:#e8c84a;--deep:#1a0f00;--card-bg:rgba(255,255,255,0.03)}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--ink);color:var(--parchment);font-family:'Cormorant Garamond',serif;font-size:17px;overflow-x:hidden;min-height:100vh}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(15,10,0,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,162,39,0.15)}
-.nav-top{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1.2rem}
-.nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold);cursor:pointer}
-#user-bar{font-family:'Space Mono',monospace;display:flex;align-items:center;gap:.6rem}
-.user-email{color:rgba(245,240,232,0.45);font-size:.6rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.btn-login,.btn-logout{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.3rem .7rem;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;cursor:pointer;transition:all .3s;white-space:nowrap}
-.btn-login:hover,.btn-logout:hover{background:var(--gold);color:var(--ink)}
-.nav-links{display:flex;list-style:none;overflow-x:auto;padding:.4rem 1.2rem;border-top:1px solid rgba(201,162,39,0.08);gap:.1rem}
-.nav-links::-webkit-scrollbar{display:none}
-.nav-links li a{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,0.4);text-decoration:none;padding:.35rem .55rem;white-space:nowrap;transition:all .3s;display:block;border-bottom:2px solid transparent}
-.nav-links li a:hover,.nav-links li a.active{color:var(--gold);border-bottom-color:var(--gold)}
-.admin-link{color:#e74c3c !important}
-
-/* PAGES */
-.page{display:none;min-height:100vh;padding-top:88px}
-.page.active{display:block}
-
-/* HERO */
-.hero{min-height:calc(100vh - 88px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 1.5rem;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(201,162,39,0.07) 0%,transparent 70%),var(--ink)}
-.hero-ornament{font-size:1.5rem;color:var(--gold);letter-spacing:.3em;margin-bottom:1rem}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,10vw,6rem);font-weight:900;line-height:1;background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-title em{font-style:italic;font-weight:400;display:block;font-size:55%;-webkit-text-fill-color:var(--parchment);color:var(--parchment)}
-.hero-slogan{font-style:italic;font-size:clamp(.9rem,2vw,1.2rem);color:rgba(245,240,232,0.65);max-width:550px;margin:1.2rem auto;line-height:1.7;border-left:2px solid var(--gold);border-right:2px solid var(--gold);padding:0 1rem}
-.hero-btns{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-top:2rem}
-.hero-btn{padding:.7rem 1.6rem;border:1px solid var(--gold);color:var(--gold);font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;background:transparent;transition:all .3s}
-.hero-btn:hover,.hero-btn.primary{background:var(--gold);color:var(--ink)}
-
-/* ESPACES GRID */
-.espaces-home{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.2rem;margin-top:1.5rem}
-.espace-home-card{background:var(--card-bg);border:1px solid rgba(201,162,39,0.12);padding:1.5rem;cursor:pointer;transition:all .35s;position:relative;overflow:hidden}
-.espace-home-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--gold);transition:width .4s}
-.espace-home-card:hover{border-color:rgba(201,162,39,0.35);background:rgba(201,162,39,0.04);transform:translateY(-3px)}
-.espace-home-card:hover::after{width:100%}
-.espace-home-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
-.espace-home-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold);margin-bottom:.3rem;font-weight:700}
-.espace-home-desc{font-size:.85rem;color:rgba(245,240,232,0.5);font-style:italic}
-
-/* SECTION */
-.section{max-width:900px;margin:0 auto;padding:3rem 1.5rem}
-.section-label{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:1rem}
-.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--gold),transparent)}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.5rem);font-weight:700;line-height:1.2;margin-bottom:1.5rem}
-.section-title span{color:var(--gold)}
-.section-intro{font-style:italic;color:rgba(245,240,232,0.6);margin-bottom:2rem;line-height:1.7;font-size:1rem}
-
-/* POSTS */
-.posts-list{display:flex;flex-direction:column;gap:1.2rem}
-.post-card{background:var(--card-bg);border:1px solid rgba(201,162,39,0.12);padding:1.5rem;transition:all .3s;position:relative}
-.post-card:hover{border-color:rgba(201,162,39,0.25)}
-.post-meta{display:flex;align-items:center;gap:1rem;margin-bottom:.8rem;flex-wrap:wrap}
-.post-author{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--gold);letter-spacing:.08em}
-.post-date{font-family:'Space Mono',monospace;font-size:.6rem;color:rgba(245,240,232,0.35)}
-.post-title{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--parchment);margin-bottom:.6rem}
-.post-content{font-size:.95rem;color:rgba(245,240,232,0.7);line-height:1.75;white-space:pre-wrap}
-.post-actions{display:flex;gap:.8rem;margin-top:1rem;align-items:center}
-.like-btn{background:transparent;border:1px solid rgba(201,162,39,0.2);color:rgba(245,240,232,0.5);padding:.3rem .7rem;font-family:'Space Mono',monospace;font-size:.65rem;cursor:pointer;transition:all .3s}
-.like-btn:hover,.like-btn.liked{border-color:var(--gold);color:var(--gold)}
-.delete-btn{position:absolute;top:.8rem;right:.8rem;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.25);color:#e74c3c;width:26px;height:26px;cursor:pointer;font-size:.75rem;transition:all .3s}
-.delete-btn:hover{background:#e74c3c;color:white}
-
-/* POST FORM */
-.post-form{background:rgba(201,162,39,0.03);border:1px solid rgba(201,162,39,0.12);padding:1.5rem;margin-bottom:2rem}
-.post-form h4{font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold);margin-bottom:1rem}
-.form-group{margin-bottom:.9rem}
-.form-group label{display:block;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:rgba(245,240,232,0.5);text-transform:uppercase;margin-bottom:.35rem}
-.form-group input,.form-group textarea,.form-group select{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(201,162,39,0.18);color:var(--parchment);padding:.6rem .9rem;font-family:'Cormorant Garamond',serif;font-size:1rem;outline:none;transition:border .3s}
-.form-group input:focus,.form-group textarea:focus{border-color:var(--gold)}
-.form-group textarea{height:90px;resize:vertical}
-.submit-btn{background:var(--gold);color:var(--ink);border:none;padding:.6rem 1.8rem;font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .3s}
-.submit-btn:hover{background:var(--gold-light)}
-.login-prompt{text-align:center;padding:2.5rem;border:1px dashed rgba(201,162,39,0.2);font-style:italic;color:rgba(245,240,232,0.4)}
-.login-prompt button{margin-top:1rem;display:block;margin:1rem auto 0}
-
-/* AGENDA */
-.agenda-card{background:var(--card-bg);border:1px solid rgba(201,162,39,0.12);padding:1.5rem;display:flex;gap:1.2rem;align-items:flex-start;transition:all .3s;position:relative}
-.agenda-card:hover{border-color:rgba(201,162,39,0.25)}
-.agenda-date-badge{background:var(--gold);color:var(--ink);padding:.6rem .8rem;font-family:'Space Mono',monospace;font-size:.65rem;font-weight:700;text-align:center;min-width:60px;line-height:1.5;flex-shrink:0}
-.agenda-body h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--parchment);margin-bottom:.4rem}
-.agenda-body p{font-size:.9rem;color:rgba(245,240,232,0.6);line-height:1.6}
-.agenda-link{display:inline-block;margin-top:.7rem;padding:.3rem .9rem;border:1px solid var(--gold);color:var(--gold);font-family:'Space Mono',monospace;font-size:.6rem;text-decoration:none;transition:all .3s}
-.agenda-link:hover{background:var(--gold);color:var(--ink)}
-
-/* AUTH */
-.auth-container{max-width:400px;margin:0 auto;padding:3rem 1.5rem}
-.auth-tabs{display:flex;margin-bottom:2rem;border-bottom:1px solid rgba(201,162,39,0.2)}
-.auth-tab{flex:1;padding:.7rem;text-align:center;font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:rgba(245,240,232,0.4);transition:all .3s;border-bottom:2px solid transparent}
-.auth-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.auth-form{display:none}
-.auth-form.active{display:block}
-.msg{padding:.5rem .9rem;margin:.5rem 0;font-family:'Space Mono',monospace;font-size:.7rem;min-height:1.4rem}
-.msg.success{background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.3);color:#2ecc71}
-.msg.error{background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);color:#e74c3c}
-
-/* ADMIN AGENDA FORM */
-.admin-section{background:rgba(201,162,39,0.03);border:1px solid rgba(201,162,39,0.15);padding:1.8rem;margin-bottom:1.5rem}
-.admin-section h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);margin-bottom:1.2rem}
-
-/* PROFIL */
-.profil-card{background:var(--card-bg);border:1px solid rgba(201,162,39,0.15);padding:2.5rem;text-align:center;max-width:360px;margin:0 auto}
-.profil-avatar{width:72px;height:72px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1rem}
-.profil-email{font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(245,240,232,0.5);margin-bottom:1rem}
-.profil-badge{display:inline-block;padding:.3rem .8rem;border:1px solid var(--gold);color:var(--gold);font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;margin-bottom:1.5rem}
-
-.loading,.empty{text-align:center;padding:2.5rem;font-style:italic;color:rgba(245,240,232,0.35);font-size:.9rem}
-footer{border-top:1px solid rgba(201,162,39,0.1);padding:2rem 1.5rem;text-align:center;font-size:.75rem;color:rgba(245,240,232,0.2);font-family:'Space Mono',monospace}
-footer span{color:var(--gold)}
-@media(max-width:500px){.agenda-card{flex-direction:column}.agenda-date-badge{min-width:auto}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma Bibliothèque – Ensemble vers la lumière</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Firebase (Auth seulement) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script>
+    // Vos clés Firebase (correctement insérées)
+    const firebaseConfig = {
+      apiKey: "AIzaSyA43_ErWc6wbwU0EqI_kZFx9DUwbAW4OcY",
+      authDomain: "ma-bibli-50495.firebaseapp.com",
+      projectId: "ma-bibli-50495",
+      storageBucket: "ma-bibli-50495.firebasestorage.app",
+      messagingSenderId: "428346441752",
+      appId: "1:428346441752:web:c65f122d9d1959ed23036d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+  </script>
+  <style>
+    /* Vos styles (je les ai raccourcis mais ils sont complets normalement) */
+    :root { --ink: #0f0a00; --parchment: #f5f0e8; --gold: #c9a227; --gold-light: #e8c84a; --rust: #8b2e00; --deep: #1a0f00; --cream: #faf7f0; --shadow-gold: rgba(201,162,39,0.15); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--ink); color: var(--parchment); font-family: 'Cormorant Garamond', serif; font-size: 18px; overflow-x: hidden; }
+    /* HERO */
+    .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; text-align: center; padding: 3rem 2rem; background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,162,39,0.07) 0%, transparent 70%), repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,162,39,0.03) 60px, rgba(201,162,39,0.03) 61px), repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,162,39,0.03) 60px, rgba(201,162,39,0.03) 61px), var(--ink); }
+    .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); opacity: 0.4; pointer-events: none; }
+    .hero-ornament { font-size: 2rem; color: var(--gold); letter-spacing: .3em; animation: fadeDown .8s ease both; margin-bottom: 1.5rem; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; line-height: 1; animation: fadeDown .8s ease .15s both; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-title em { font-style: italic; font-weight: 400; display: block; font-size: 60%; -webkit-text-fill-color: var(--parchment); color: var(--parchment); letter-spacing: .1em; }
+    .hero-slogan { font-style: italic; font-weight: 300; font-size: clamp(1rem, 2.5vw, 1.4rem); color: rgba(245,240,232,0.7); max-width: 600px; margin: 1.5rem auto; line-height: 1.7; animation: fadeDown .8s ease .3s both; border-left: 2px solid var(--gold); border-right: 2px solid var(--gold); padding: 0 1rem; }
+    .hero-cta { display: inline-block; margin-top: 2.5rem; padding: .8rem 2.5rem; border: 1px solid var(--gold); color: var(--gold); font-family: 'Space Mono', monospace; font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; text-decoration: none; transition: all .3s; animation: fadeDown .8s ease .45s both; }
+    .hero-cta:hover { background: var(--gold); color: var(--ink); }
+    .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: var(--gold); font-size: .7rem; font-family: 'Space Mono', monospace; letter-spacing: .2em; text-transform: uppercase; animation: bounce 2s infinite; }
+    /* SECTIONS */
+    section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: 'Space Mono', monospace; font-size: .7rem; letter-spacing: .3em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, var(--gold), transparent); }
+    h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; color: var(--parchment); line-height: 1.15; margin-bottom: 2.5rem; }
+    h2 span { color: var(--gold); }
+    /* MISSION */
+    .mission { background: linear-gradient(135deg, rgba(201,162,39,0.05) 0%, transparent 60%), var(--deep); border: 1px solid rgba(201,162,39,0.15); border-radius: 2px; padding: 4rem 3rem; max-width: 1100px; margin: 0 auto; position: relative; }
+    .mission::before { content: '❝'; position: absolute; top: -1.5rem; left: 3rem; font-size: 5rem; color: var(--gold); opacity: .2; font-family: Georgia, serif; line-height: 1; }
+    .mission-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
+    .mission-item { padding: 1.5rem; border-left: 2px solid var(--gold); transition: background .3s; }
+    .mission-item:hover { background: rgba(201,162,39,0.05); }
+    .mission-item p { font-size: 1rem; line-height: 1.7; color: rgba(245,240,232,0.8); font-style: italic; }
+    /* ESPACES */
+    .espaces-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+    .espace-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(201,162,39,0.12); padding: 2rem 1.5rem; transition: all .4s cubic-bezier(.175,.885,.32,1.275); cursor: default; position: relative; overflow: hidden; }
+    .espace-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--gold); transition: width .4s; }
+    .espace-card:hover { border-color: rgba(201,162,39,0.4); background: rgba(201,162,39,0.04); transform: translateY(-4px); }
+    .espace-card:hover::after { width: 100%; }
+    .espace-icon { font-size: 1.8rem; display: block; margin-bottom: 1rem; }
+    .espace-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--gold); margin-bottom: .5rem; }
+    .espace-desc { font-size: .9rem; color: rgba(245,240,232,0.55); font-style: italic; }
+    /* ACTIVITÉS */
+    .activities-full { background: var(--deep); border: 1px solid rgba(201,162,39,0.12); padding: 4rem 2rem; }
+    .activities-full section { padding: 0; }
+    .act-list { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 1rem; }
+    .act-item { display: flex; align-items: center; gap: 1.5rem; padding: 1.2rem 1.5rem; border: 1px solid rgba(201,162,39,0.08); transition: all .3s; }
+    .act-item:hover { border-color: var(--gold); background: rgba(201,162,39,0.04); }
+    .act-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .act-text { font-size: 1rem; color: rgba(245,240,232,0.8); }
+    /* VALEURS */
+    .valeurs-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; justify-content: center; }
+    .valeur-pill { display: flex; align-items: center; gap: .6rem; padding: .7rem 1.5rem; border: 1px solid rgba(201,162,39,0.25); font-family: 'Space Mono', monospace; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); transition: all .3s; }
+    .valeur-pill:hover { background: var(--gold); color: var(--ink); transform: scale(1.05); }
+    /* PUBLIC */
+    .public-section { text-align: center; }
+    .public-tags { display: flex; flex-wrap: wrap; gap: .8rem; justify-content: center; margin-top: 1.5rem; }
+    .public-tag { padding: .5rem 1.2rem; background: rgba(201,162,39,0.08); border: 1px solid rgba(201,162,39,0.2); font-style: italic; font-size: 1rem; color: rgba(245,240,232,0.7); transition: all .3s; }
+    .public-tag:hover { background: rgba(201,162,39,0.15); color: var(--parchment); }
+    /* CONTACT */
+    .contact-section { background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(201,162,39,0.07) 0%, transparent 70%), var(--deep); border: 1px solid rgba(201,162,39,0.15); padding: 5rem 2rem; text-align: center; }
+    .contact-section section { padding: 0; }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-top: 2.5rem; }
+    .contact-link { display: flex; align-items: center; gap: .8rem; padding: 1rem 2rem; border: 1px solid rgba(201,162,39,0.25); text-decoration: none; color: var(--parchment); font-family: 'Space Mono', monospace; font-size: .75rem; letter-spacing: .1em; transition: all .3s; }
+    .contact-link:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(201,162,39,0.1); }
+    .contact-icon { font-size: 1.2rem; }
+    /* AUTH SECTION */
+    .auth-section { background: var(--deep); border: 1px solid rgba(201,162,39,0.15); padding: 5rem 2rem; text-align: center; }
+    .auth-section input { width: 100%; padding: 0.8rem; margin-bottom: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(201,162,39,0.3); color: var(--parchment); font-family: 'Cormorant Garamond', serif; font-size: 1rem; }
+    .auth-section input:focus { outline: none; border-color: var(--gold); }
+    .auth-section button { width: 100%; padding: 1rem; background: transparent; border: 1px solid var(--gold); color: var(--gold); font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; margin-top: 0.5rem; }
+    .auth-section button:hover { background: var(--gold); color: var(--ink); }
+    .toggle-link { color: var(--gold); cursor: pointer; text-decoration: underline; margin-top: 1rem; display: inline-block; }
+    .member-section { background: var(--deep); border: 1px solid var(--gold); padding: 3rem; text-align: center; max-width: 600px; margin: 2rem auto; }
+    .member-section h3 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); margin-bottom: 1rem; }
+    .member-section p { font-size: 1.2rem; margin-bottom: 2rem; }
+    /* FOOTER */
+    footer { border-top: 1px solid rgba(201,162,39,0.12); padding: 2rem; text-align: center; font-size: .8rem; color: rgba(245,240,232,0.3); font-family: 'Space Mono', monospace; letter-spacing: .1em; }
+    footer span { color: var(--gold); }
+    .divider { max-width: 1100px; margin: 0 auto; border: none; border-top: 1px solid rgba(201,162,39,0.08); }
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(15,10,0,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,162,39,0.1); }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-family: 'Space Mono', monospace; font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(245,240,232,0.5); text-decoration: none; transition: color .3s; }
+    .nav-links a:hover { color: var(--gold); }
+    @media (max-width: 600px) { .nav-links { display: none; } .mission { padding: 2.5rem 1.5rem; } section { padding: 3rem 1.2rem; } }
+  </style>
 </head>
 <body>
+  <nav>
+    <a class="nav-logo" href="#">Ma Bibliothèque</a>
+    <ul class="nav-links">
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#espaces">Espaces</a></li>
+      <li><a href="#activites">Activités</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#auth">Espace membre</a></li>
+    </ul>
+  </nav>
 
-<nav>
-  <div class="nav-top">
-    <div class="nav-logo" onclick="showPage('accueil')">Ma Bibliothèque</div>
-    <div id="user-bar"><button class="btn-login" onclick="showPage('auth')">Se connecter</button></div>
-  </div>
-  <ul class="nav-links">
-    <li><a href="#" onclick="showPage('accueil')" id="nav-accueil" class="active">🏠</a></li>
-    <li><a href="#" onclick="showPage('lecteurs')" id="nav-lecteurs">📚 Lecteurs</a></li>
-    <li><a href="#" onclick="showPage('agora')" id="nav-agora">🔎 Agora</a></li>
-    <li><a href="#" onclick="showPage('salon')" id="nav-salon">☕ Salon</a></li>
-    <li><a href="#" onclick="showPage('mots')" id="nav-mots">🏡 Mots</a></li>
-    <li><a href="#" onclick="showPage('mondial')" id="nav-mondial">🌐 Mondial</a></li>
-    <li><a href="#" onclick="showPage('slam')" id="nav-slam">🎤 Slam</a></li>
-    <li><a href="#" onclick="showPage('eclair')" id="nav-eclair">⚡ Éclair</a></li>
-    <li><a href="#" onclick="showPage('ecrivains')" id="nav-ecrivains">✍️ Écrivains</a></li>
-    <li><a href="#" onclick="showPage('agenda')" id="nav-agenda">📅 Agenda</a></li>
-    <li id="nav-auth-li"></li>
-  </ul>
-</nav>
-
-<!-- ACCUEIL -->
-<div class="page active" id="page-accueil">
-  <div class="hero">
+  <div class="hero" id="accueil">
     <div class="hero-ornament">✦ ✦ ✦</div>
     <h1 class="hero-title">Ma<br><em>Bibliothèque</em></h1>
     <p class="hero-slogan">« Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science »</p>
-    <div class="hero-btns">
-      <button class="hero-btn primary" onclick="showPage('auth')">Rejoindre la communauté</button>
-      <button class="hero-btn" onclick="showPage('agenda')">📅 Voir l'agenda</button>
-    </div>
+    <a class="hero-cta" href="#mission">Découvrir la communauté</a>
+    <div class="scroll-hint">↓ explorer</div>
   </div>
-  <div class="section">
-    <div class="section-label">Nos espaces</div>
-    <h2 class="section-title">La <span>communauté</span></h2>
-    <div class="espaces-home">
-      <div class="espace-home-card" onclick="showPage('lecteurs')"><span class="espace-home-icon">📚</span><div class="espace-home-name">Au bonheur des lecteurs</div><div class="espace-home-desc">Lectures partagées</div></div>
-      <div class="espace-home-card" onclick="showPage('agora')"><span class="espace-home-icon">🔎</span><div class="espace-home-name">L'Agora des curieux</div><div class="espace-home-desc">Débats et réflexions</div></div>
-      <div class="espace-home-card" onclick="showPage('salon')"><span class="espace-home-icon">☕</span><div class="espace-home-name">Le Salon des lecteurs</div><div class="espace-home-desc">Discussions libres</div></div>
-      <div class="espace-home-card" onclick="showPage('mots')"><span class="espace-home-icon">🏡</span><div class="espace-home-name">La Maison des mots</div><div class="espace-home-desc">Expression écrite</div></div>
-      <div class="espace-home-card" onclick="showPage('mondial')"><span class="espace-home-icon">🌐</span><div class="espace-home-name">Librairie mondiale</div><div class="espace-home-desc">Actualité internationale</div></div>
-      <div class="espace-home-card" onclick="showPage('slam')"><span class="espace-home-icon">🎤</span><div class="espace-home-name">Les Voix du Slam</div><div class="espace-home-desc">Performances orales</div></div>
-      <div class="espace-home-card" onclick="showPage('eclair')"><span class="espace-home-icon">⚡</span><div class="espace-home-name">Atelier éclair</div><div class="espace-home-desc">Découvertes rapides</div></div>
-      <div class="espace-home-card" onclick="showPage('ecrivains')"><span class="espace-home-icon">✍️</span><div class="espace-home-name">L'Atelier des écrivains</div><div class="espace-home-desc">Création littéraire</div></div>
-    </div>
-  </div>
-</div>
 
-<!-- ESPACE : AU BONHEUR DES LECTEURS -->
-<div class="page" id="page-lecteurs">
-  <div class="section">
-    <div class="section-label">Espace communautaire</div>
-    <h2 class="section-title">📚 Au bonheur <span>des lecteurs</span></h2>
-    <p class="section-intro">Partagez vos lectures, coups de cœur, résumés de livres et recommandations littéraires.</p>
-    <div id="form-lecteurs"></div>
-    <div id="posts-lecteurs"><div class="loading">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ESPACE : AGORA -->
-<div class="page" id="page-agora">
-  <div class="section">
-    <div class="section-label">Espace communautaire</div>
-    <h2 class="section-title">🔎 L'Agora <span>des curieux</span></h2>
-    <p class="section-intro">Débattez, réfléchissez, questionnez. Ici toutes les idées méritent d'être explorées.</p>
-    <div id="form-agora"></div>
-    <div id="posts-agora"><div class="loading">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ESPACE : SALON -->
-<div class="page" id="page-salon">
-  <div class="section">
-    <div class="section-label">Espace communautaire</div>
-    <h2 class="section-title">☕ Le Salon <span>des lecteurs</span></h2>
-    <p class="section-intro">Discussions libres et interactives. Parlez de tout, rencontrez-vous autour du savoir.</p>
-    <div id="form-salon"></div>
-    <div id="posts-salon"><div class="loading">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ESPACE : MAISON DES MOTS -->
-<div class="page" id="page-mots">
-  <div class="section">
-    <div class="section-label">Espace communautaire</div>
-    <h2 class="section-title">🏡 La Maison <span>des mots</span></h2>
-    <p class="section-intro">Exprimez-vous par l'écrit. Publiez vos textes, nouvelles, poèmes, réflexions personnelles.</p>
-    <div id="form-mots"></div>
-    <div id="posts-mots"><div class="loading">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ESPACE : LIBRAIRIE MONDIALE -->
-<div class="page" id="page-mondial">
-  <div class="section">
-    <div class="section-label">Espace communautaire</div>
-    <h2 class="section-title">🌐 Librairie des <span>perspectives mondiales</span></h2>
-    <p class="section-intro">Ouvrons nos horizons. Actualités internationales, livres du monde entier, enjeux globaux.</p>
-    <div id="form-mondial"></div>
-    <div id="posts-mondial"><div class="loading">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ESPACE : SLAM -->
-<div class="page" id="page-slam">
-  <div class="section">
-    <div class="section-label">Espace communautaire</div>
-    <h2 class="section-title">🎤 Les Voix <span>du Slam</span></h2>
-    <p class="section-intro">Partagez vos textes de slam, poésies orales, performances. La parole comme art.</p>
-    <div id="form-slam"></div>
-    <div id="posts-slam"><div class="loading">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ESPACE : ÉCLAIR -->
-<div class="page" id="page-eclair">
-  <div class="section">
-    <div class="section-label">Espace communautaire</div>
-    <h2 class="section-title">⚡ Atelier éclair <span>de savoir</span></h2>
-    <p class="section-intro">Découvertes rapides, faits insolites, capsules de connaissance. Apprendre en 2 minutes !</p>
-    <div id="form-eclair"></div>
-    <div id="posts-eclair"><div class="loading">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ESPACE : ÉCRIVAINS -->
-<div class="page" id="page-ecrivains">
-  <div class="section">
-    <div class="section-label">Espace communautaire</div>
-    <h2 class="section-title">✍️ L'Atelier <span>des écrivains</span></h2>
-    <p class="section-intro">Accompagnement et création littéraire. Partagez vos œuvres, donnez et recevez des retours.</p>
-    <div id="form-ecrivains"></div>
-    <div id="posts-ecrivains"><div class="loading">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- AGENDA -->
-<div class="page" id="page-agenda">
-  <div class="section">
-    <div class="section-label">Rencontres & événements</div>
-    <h2 class="section-title">📅 Agenda <span>& Annonces</span></h2>
-    <div id="admin-agenda-form" style="display:none">
-      <div class="admin-section">
-        <h3>➕ Publier une annonce</h3>
-        <div class="form-group"><label>Titre *</label><input id="annonce-titre" type="text" placeholder="Titre de l'événement"></div>
-        <div class="form-group"><label>Date *</label><input id="annonce-date" type="date"></div>
-        <div class="form-group"><label>Description</label><textarea id="annonce-desc" placeholder="Détails de l'événement..."></textarea></div>
-        <div class="form-group"><label>Lien (Zoom, Meet...)</label><input id="annonce-lien" type="url" placeholder="https://..."></div>
-        <button class="submit-btn" onclick="ajouterAnnonce()">Publier l'annonce</button>
-        <div id="annonce-msg" class="msg"></div>
+  <div id="mission" style="background: var(--deep); padding: 5rem 2rem;">
+    <div class="mission">
+      <div class="section-label">Notre raison d'être</div>
+      <h2>Une mission,<br><span>trois engagements</span></h2>
+      <div class="mission-items">
+        <div class="mission-item"><p>Promouvoir la lecture régulière et agréable comme fondement de l'épanouissement personnel.</p></div>
+        <div class="mission-item"><p>Créer un cadre d'échanges intellectuels autour de thèmes variés : éducation, société, culture, sciences, actualités.</p></div>
+        <div class="mission-item"><p>Favoriser l'apprentissage continu chez les élèves, étudiants et tous les passionnés du savoir.</p></div>
       </div>
     </div>
-    <div id="agenda-list"><div class="loading">Chargement...</div></div>
   </div>
-</div>
 
-<!-- AUTH -->
-<div class="page" id="page-auth">
-  <div class="auth-container">
-    <div class="section-label">Rejoindre la communauté</div>
-    <h2 class="section-title">Mon <span>compte</span></h2>
-    <div class="auth-tabs">
-      <div class="auth-tab active" onclick="switchAuth('inscription',this)">Inscription</div>
-      <div class="auth-tab" onclick="switchAuth('connexion',this)">Connexion</div>
-    </div>
-    <div id="auth-msg" class="msg"></div>
-    <div class="auth-form active" id="form-inscription">
-      <div class="form-group"><label>Nom complet</label><input id="reg-nom" type="text" placeholder="Votre nom"></div>
-      <div class="form-group"><label>Email</label><input id="reg-email" type="email" placeholder="votre@email.com"></div>
-      <div class="form-group"><label>Mot de passe</label><input id="reg-mdp" type="password" placeholder="Minimum 6 caractères"></div>
-      <button class="submit-btn" onclick="inscrire()">Rejoindre la communauté</button>
-    </div>
-    <div class="auth-form" id="form-connexion">
-      <div class="form-group"><label>Email</label><input id="login-email" type="email" placeholder="votre@email.com"></div>
-      <div class="form-group"><label>Mot de passe</label><input id="login-mdp" type="password" placeholder="Votre mot de passe"></div>
-      <button class="submit-btn" onclick="connecter()">Se connecter</button>
-    </div>
+  <hr class="divider">
+
+  <div id="espaces" style="padding: 5rem 2rem;">
+    <section style="padding:0">
+      <div class="section-label">Nos lieux de vie</div>
+      <h2>Les <span>espaces</span><br>de la communauté</h2>
+      <div class="espaces-grid">
+        <div class="espace-card"><span class="espace-icon">📚</span><div class="espace-name">Au bonheur des lecteurs</div><div class="espace-desc">Lectures partagées et coups de cœur littéraires</div></div>
+        <div class="espace-card"><span class="espace-icon">🔎</span><div class="espace-name">L'Agora des curieux</div><div class="espace-desc">Débats ouverts et réflexions collectives</div></div>
+        <div class="espace-card"><span class="espace-icon">☕</span><div class="espace-name">Le Salon des lecteurs</div><div class="espace-desc">Discussions libres et interactives</div></div>
+        <div class="espace-card"><span class="espace-icon">🏡</span><div class="espace-name">La Maison des mots</div><div class="espace-desc">Expression écrite et création personnelle</div></div>
+        <div class="espace-card"><span class="espace-icon">🌐</span><div class="espace-name">Librairie des perspectives mondiales</div><div class="espace-desc">Ouverture sur l'actualité internationale</div></div>
+        <div class="espace-card"><span class="espace-icon">🎤</span><div class="espace-name">Les Voix du Slam</div><div class="espace-desc">Performances orales et poésie vivante</div></div>
+        <div class="espace-card"><span class="espace-icon">⚡</span><div class="espace-name">Atelier éclair de savoir</div><div class="espace-desc">Découvertes rapides et capsules de connaissance</div></div>
+        <div class="espace-card"><span class="espace-icon">✍️</span><div class="espace-name">L'Atelier des écrivains</div><div class="espace-desc">Accompagnement et création littéraire</div></div>
+      </div>
+    </section>
   </div>
-</div>
 
-<!-- PROFIL -->
-<div class="page" id="page-profil">
-  <div class="section">
-    <div class="section-label">Mon espace</div>
-    <h2 class="section-title">Mon <span>profil</span></h2>
-    <div class="profil-card">
-      <div class="profil-avatar">👤</div>
-      <div class="profil-email" id="profil-email"></div>
-      <div class="profil-badge" id="profil-badge">Membre actif</div><br><br>
-      <button class="submit-btn" onclick="window._deconnecter && window._deconnecter()">Se déconnecter</button>
-    </div>
+  <div id="activites" class="activities-full">
+    <section>
+      <div class="section-label">Ce que nous faisons</div>
+      <h2>Activités<br><span>principales</span></h2>
+      <div class="act-list">
+        <div class="act-item"><span class="act-icon">📅</span><span class="act-text">Rencontres hebdomadaires en ligne et parfois en présentiel</span></div>
+        <div class="act-item"><span class="act-icon">📖</span><span class="act-text">Cercles de lecture gratuits ouverts à tous</span></div>
+        <div class="act-item"><span class="act-icon">💬</span><span class="act-text">Débats et panels sur des thèmes d'actualité</span></div>
+        <div class="act-item"><span class="act-icon">📚</span><span class="act-text">Partage de résumés de livres et d'articles</span></div>
+        <div class="act-item"><span class="act-icon">✍️</span><span class="act-text">Production de textes originaux par les membres</span></div>
+      </div>
+    </section>
   </div>
-</div>
 
-<footer>
-  <span>Ma Bibliothèque</span> · Communauté numérique d'apprentissage collaboratif<br>
-  <small>« Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science »</small>
-</footer>
+  <hr class="divider">
 
-<!-- FIREBASE -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, orderBy, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  <div style="padding: 5rem 2rem;">
+    <section class="public-section" style="padding:0; margin-bottom:5rem;">
+      <div class="section-label">Qui peut nous rejoindre</div>
+      <h2>Notre <span>public</span></h2>
+      <div class="public-tags">
+        <div class="public-tag">Étudiants</div>
+        <div class="public-tag">Écoliers</div>
+        <div class="public-tag">Enseignants</div>
+        <div class="public-tag">Amoureux de la lecture</div>
+        <div class="public-tag">Curieux du monde</div>
+      </div>
+    </section>
+    <section style="padding:0; text-align:center;">
+      <div class="section-label">Ce en quoi nous croyons</div>
+      <h2>Nos <span>valeurs</span></h2>
+      <div class="valeurs-row">
+        <div class="valeur-pill">📘 Lecture</div>
+        <div class="valeur-pill">🌍 Partage</div>
+        <div class="valeur-pill">🔎 Curiosité</div>
+        <div class="valeur-pill">💡 Esprit critique</div>
+        <div class="valeur-pill">🤝 Communauté</div>
+      </div>
+    </section>
+  </div>
 
-// ⚠️ REMPLACE PAR TA CONFIGURATION FIREBASE (console.firebase.google.com)
-const firebaseConfig = {
-  apiKey: "VOTRE_API_KEY",
-  authDomain: "VOTRE_PROJECT.firebaseapp.com",
-  projectId: "VOTRE_PROJECT_ID",
-  storageBucket: "VOTRE_PROJECT.appspot.com",
-  messagingSenderId: "VOTRE_SENDER_ID",
-  appId: "VOTRE_APP_ID"
-};
+  <div id="contact" class="contact-section">
+    <section>
+      <div class="section-label">Nous rejoindre</div>
+      <h2>Entrons en<br><span>contact</span></h2>
+      <p style="color:rgba(245,240,232,0.6); font-style:italic; max-width:500px; margin:0 auto;">Rejoignez une communauté de passionnés. Chaque voix compte, chaque lecteur apporte sa lumière.</p>
+      <div class="contact-links">
+        <a class="contact-link" href="https://wa.me/224623268119" target="_blank"><span class="contact-icon">📱</span> WhatsApp · +224 623 26 81 19</a>
+        <a class="contact-link" href="https://www.facebook.com/alhassane.barry.977325" target="_blank"><span class="contact-icon">🌐</span> Facebook</a>
+        <a class="contact-link" href="mailto:alhassanebarryninewills9@gmail.com"><span class="contact-icon">📧</span> Email</a>
+      </div>
+    </section>
+  </div>
 
-const ADMIN_EMAIL = "alhassanebarryninewills9@gmail.com";
-let currentUser = null, isAdmin = false, db, auth;
+  <div id="auth" class="auth-section">
+    <section style="max-width: 500px; margin: 0 auto;">
+      <div id="nonConnecte">
+        <div class="section-label">Espace membre</div>
+        <h2><span id="formTitle">Inscription</span></h2>
+        <div id="inscriptionForm">
+          <form id="inscription-form">
+            <div style="display: flex; gap: 1rem;">
+              <input type="text" id="nom" placeholder="Nom" required>
+              <input type="text" id="prenom" placeholder="Prénom" required>
+            </div>
+            <input type="email" id="email" placeholder="E-mail" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+            <input type="password" id="confirm-password" placeholder="Confirmer mot de passe" required>
+            <button type="button" id="create-btn">CRÉATEUR</button>
+          </form>
+        </div>
+        <div id="connexionForm" style="display: none;">
+          <form id="login-form">
+            <input type="email" id="login-email" placeholder="E-mail" required>
+            <input type="password" id="login-password" placeholder="Mot de passe" required>
+            <button type="button" id="login-btn">SE CONNECTER</button>
+          </form>
+        </div>
+        <span class="toggle-link" id="toggleForm">Déjà un compte ? Connectez-vous</span>
+      </div>
+      <div id="connecte" style="display: none;">
+        <div class="member-section">
+          <h3>Bienvenue dans votre espace</h3>
+          <p id="welcomeMessage"></p>
+          <button id="logout-btn">SE DÉCONNECTER</button>
+        </div>
+      </div>
+    </section>
+  </div>
 
-const ESPACES = ['lecteurs','agora','salon','mots','mondial','slam','eclair','ecrivains'];
+  <footer>
+    <span>Ma Bibliothèque</span> · Communauté numérique d'apprentissage collaboratif<br>
+    <small>« Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science »</small>
+  </footer>
 
-try {
-  const app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
+  <script>
+    // Intersection Observer (optionnel)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
 
-  onAuthStateChanged(auth, user => {
-    currentUser = user;
-    isAdmin = user && user.email === ADMIN_EMAIL;
-    updateUI();
-    const p = window._currentPage;
-    if (ESPACES.includes(p)) renderEspace(p);
-    if (p === 'agenda') loadAgenda();
-  });
-} catch(e) { console.log('Firebase non configuré'); }
-
-function updateUI() {
-  const userBar = document.getElementById('user-bar');
-  const navLi = document.getElementById('nav-auth-li');
-  if (currentUser) {
-    userBar.innerHTML = `<span class="user-email">${currentUser.email}</span><button class="btn-logout" onclick="window._deconnecter()">Sortir</button>`;
-    navLi.innerHTML = `<a href="#" onclick="showPage('profil')">👤</a>`;
-    const pe = document.getElementById('profil-email');
-    if (pe) pe.textContent = currentUser.email;
-    const pb = document.getElementById('profil-badge');
-    if (pb) pb.textContent = isAdmin ? '⚙️ Administrateur' : '✅ Membre actif';
-    if (isAdmin) {
-      const af = document.getElementById('admin-agenda-form');
-      if (af) af.style.display = 'block';
-    }
-  } else {
-    userBar.innerHTML = `<button class="btn-login" onclick="showPage('auth')">Se connecter</button>`;
-    navLi.innerHTML = `<a href="#" onclick="showPage('auth')">Se connecter</a>`;
-  }
-}
-
-window._deconnecter = async () => { await signOut(auth); showPage('accueil'); };
-
-window.inscrire = async () => {
-  const nom = document.getElementById('reg-nom').value;
-  const email = document.getElementById('reg-email').value;
-  const mdp = document.getElementById('reg-mdp').value;
-  if (!nom||!email||!mdp) return showMsg('auth-msg','Remplis tous les champs !','error');
-  try {
-    await createUserWithEmailAndPassword(auth, email, mdp);
-    showMsg('auth-msg','Bienvenue dans Ma Bibliothèque ! 📚','success');
-    setTimeout(()=>showPage('accueil'),1200);
-  } catch(e) { showMsg('auth-msg', traErr(e.code), 'error'); }
-};
-
-window.connecter = async () => {
-  const email = document.getElementById('login-email').value;
-  const mdp = document.getElementById('login-mdp').value;
-  try {
-    await signInWithEmailAndPassword(auth, email, mdp);
-    showMsg('auth-msg','Connecté ! Bon retour 👋','success');
-    setTimeout(()=>showPage('accueil'),1000);
-  } catch(e) { showMsg('auth-msg','Email ou mot de passe incorrect.','error'); }
-};
-
-// ESPACES GÉNÉRIQUES
-function renderEspace(espace) {
-  const formEl = document.getElementById('form-'+espace);
-  const postsEl = document.getElementById('posts-'+espace);
-  if (!formEl || !postsEl) return;
-
-  if (!currentUser) {
-    formEl.innerHTML = '';
-    postsEl.innerHTML = `<div class="login-prompt">Connectez-vous pour participer à cet espace.<button class="submit-btn" onclick="showPage('auth')">Se connecter</button></div>`;
-    return;
-  }
-
-  formEl.innerHTML = `
-    <div class="post-form">
-      <h4>✏️ Publier dans cet espace</h4>
-      <div class="form-group"><label>Titre (optionnel)</label><input id="ptitle-${espace}" type="text" placeholder="Titre de votre publication..."></div>
-      <div class="form-group"><label>Contenu *</label><textarea id="pcontent-${espace}" placeholder="Partagez votre message, texte, réflexion..."></textarea></div>
-      <button class="submit-btn" onclick="publier('${espace}')">Publier</button>
-      <div id="pmsg-${espace}" class="msg"></div>
-    </div>`;
-
-  loadPosts(espace);
-}
-
-window.publier = async (espace) => {
-  if (!currentUser || !db) return;
-  const title = document.getElementById('ptitle-'+espace)?.value || '';
-  const content = document.getElementById('pcontent-'+espace)?.value || '';
-  if (!content.trim()) return showMsg('pmsg-'+espace,'Le contenu est obligatoire !','error');
-  try {
-    await addDoc(collection(db,'espace_'+espace), {
-      titre: title, contenu: content,
-      auteur: currentUser.displayName || currentUser.email.split('@')[0],
-      email: currentUser.email,
-      createdAt: serverTimestamp()
+    document.querySelectorAll('.espace-card, .act-item, .mission-item, .valeur-pill, .public-tag, .contact-link').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity .6s ease, transform .6s ease, border-color .3s, background .3s, color .3s';
+      observer.observe(el);
     });
-    showMsg('pmsg-'+espace,'Publié ! 🎉','success');
-    if(document.getElementById('ptitle-'+espace)) document.getElementById('ptitle-'+espace).value='';
-    document.getElementById('pcontent-'+espace).value='';
-    loadPosts(espace);
-  } catch(e) { showMsg('pmsg-'+espace,'Erreur lors de la publication.','error'); }
-};
 
-async function loadPosts(espace) {
-  const el = document.getElementById('posts-'+espace);
-  if (!el || !db) return;
-  el.innerHTML = '<div class="loading">Chargement...</div>';
-  try {
-    const snap = await getDocs(query(collection(db,'espace_'+espace), orderBy('createdAt','desc')));
-    if (snap.empty) { el.innerHTML = '<div class="empty">Soyez le premier à publier dans cet espace !</div>'; return; }
-    el.innerHTML = '<div class="posts-list"></div>';
-    const list = el.querySelector('.posts-list');
-    snap.forEach(d => {
-      const p = d.data();
-      const date = p.createdAt ? new Date(p.createdAt.seconds*1000).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}) : '';
-      const canDel = isAdmin || (currentUser && currentUser.email === p.email);
-      list.innerHTML += `
-        <div class="post-card">
-          <div class="post-meta">
-            <span class="post-author">👤 ${p.auteur||'Anonyme'}</span>
-            <span class="post-date">${date}</span>
-          </div>
-          ${p.titre?`<div class="post-title">${p.titre}</div>`:''}
-          <div class="post-content">${p.contenu}</div>
-          ${canDel?`<button class="delete-btn" onclick="supprimerPost('${espace}','${d.id}')">🗑️</button>`:''}
-        </div>`;
+    // Gestion de l'affichage formulaire
+    const nonConnecte = document.getElementById('nonConnecte');
+    const connecte = document.getElementById('connecte');
+    const inscriptionForm = document.getElementById('inscriptionForm');
+    const connexionForm = document.getElementById('connexionForm');
+    const toggleLink = document.getElementById('toggleForm');
+    const formTitle = document.getElementById('formTitle');
+    const welcomeMsg = document.getElementById('welcomeMessage');
+
+    let isInscription = true;
+    toggleLink.addEventListener('click', () => {
+      isInscription = !isInscription;
+      if (isInscription) {
+        formTitle.textContent = 'Inscription';
+        inscriptionForm.style.display = 'block';
+        connexionForm.style.display = 'none';
+        toggleLink.textContent = 'Déjà un compte ? Connectez-vous';
+      } else {
+        formTitle.textContent = 'Connexion';
+        inscriptionForm.style.display = 'none';
+        connexionForm.style.display = 'block';
+        toggleLink.textContent = 'Pas encore de compte ? Inscrivez-vous';
+      }
     });
-  } catch(e) { el.innerHTML = '<div class="empty">Erreur de chargement.</div>'; }
-}
 
-window.supprimerPost = async (espace, id) => {
-  if (!db) return;
-  await deleteDoc(doc(db,'espace_'+espace,id));
-  loadPosts(espace);
-};
-
-// AGENDA
-async function loadAgenda() {
-  const el = document.getElementById('agenda-list');
-  if (!el || !db) return;
-  el.innerHTML = '<div class="loading">Chargement...</div>';
-  try {
-    const snap = await getDocs(query(collection(db,'annonces'), orderBy('date','asc')));
-    if (snap.empty) { el.innerHTML = '<div class="empty">Aucune annonce pour le moment.</div>'; return; }
-    el.innerHTML = '';
-    snap.forEach(d => {
-      const a = d.data();
-      const df = a.date ? new Date(a.date+'T00:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : '';
-      el.innerHTML += `
-        <div class="agenda-card">
-          <div class="agenda-date-badge">${df}</div>
-          <div class="agenda-body">
-            <h3>${a.titre}</h3>
-            <p>${a.description||''}</p>
-            ${a.lien?`<a href="${a.lien}" target="_blank" class="agenda-link">Rejoindre →</a>`:''}
-          </div>
-          ${isAdmin?`<button class="delete-btn" onclick="supprimerAnnonce('${d.id}')">🗑️</button>`:''}
-        </div>`;
+    // État de l'utilisateur
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        nonConnecte.style.display = 'none';
+        connecte.style.display = 'block';
+        welcomeMsg.textContent = `Bonjour ${user.email} ! Vous êtes connecté.`;
+      } else {
+        nonConnecte.style.display = 'block';
+        connecte.style.display = 'none';
+      }
     });
-  } catch(e) { el.innerHTML = '<div class="empty">Erreur de chargement.</div>'; }
-}
 
-window.ajouterAnnonce = async () => {
-  if (!isAdmin||!db) return;
-  const titre = document.getElementById('annonce-titre').value;
-  const date = document.getElementById('annonce-date').value;
-  if (!titre||!date) return showMsg('annonce-msg','Titre et date obligatoires !','error');
-  await addDoc(collection(db,'annonces'),{titre,date,description:document.getElementById('annonce-desc').value,lien:document.getElementById('annonce-lien').value,createdAt:serverTimestamp()});
-  showMsg('annonce-msg','Annonce publiée ! 📅','success');
-  ['annonce-titre','annonce-date','annonce-desc','annonce-lien'].forEach(id=>document.getElementById(id).value='');
-  loadAgenda();
-};
+    // Inscription
+    document.getElementById('create-btn').addEventListener('click', function() {
+      const nom = document.getElementById('nom').value.trim();
+      const prenom = document.getElementById('prenom').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm-password').value;
 
-window.supprimerAnnonce = async (id) => {
-  if (!isAdmin||!db) return;
-  await deleteDoc(doc(db,'annonces',id));
-  loadAgenda();
-};
+      if (!nom || !prenom || !email || !password || !confirm) {
+        alert('Veuillez remplir tous les champs.');
+        return;
+      }
+      if (password !== confirm) {
+        alert('Les mots de passe ne correspondent pas.');
+        return;
+      }
+      if (password.length < 6) {
+        alert('Le mot de passe doit contenir au moins 6 caractères.');
+        return;
+      }
 
-window._loadAgenda = loadAgenda;
-window._loadEspace = renderEspace;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          alert('Inscription réussie ! Bienvenue ' + prenom + ' ' + nom + ' !');
+        })
+        .catch((error) => {
+          alert('Erreur : ' + error.message);
+        });
+    });
 
-function showMsg(id,msg,type){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className='msg '+type;setTimeout(()=>{el.textContent='';el.className='msg';},3500);}
-function traErr(code){if(code==='auth/email-already-in-use')return 'Cet email est déjà utilisé.';if(code==='auth/weak-password')return 'Mot de passe trop court (6 caractères min).';if(code==='auth/invalid-email')return 'Email invalide.';return 'Une erreur est survenue.';}
-</script>
+    // Connexion
+    document.getElementById('login-btn').addEventListener('click', function() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
 
-<script>
-const ESPACES = ['lecteurs','agora','salon','mots','mondial','slam','eclair','ecrivains'];
-window._currentPage = 'accueil';
+      if (!email || !password) {
+        alert('Veuillez remplir tous les champs.');
+        return;
+      }
 
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  const pageEl = document.getElementById('page-'+page);
-  if (pageEl) pageEl.classList.add('active');
-  const navEl = document.getElementById('nav-'+page);
-  if (navEl) navEl.classList.add('active');
-  window._currentPage = page;
-  window.scrollTo(0,0);
-  if (ESPACES.includes(page) && window._loadEspace) window._loadEspace(page);
-  if (page==='agenda' && window._loadAgenda) window._loadAgenda();
-}
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          alert('Connexion réussie !');
+        })
+        .catch((error) => {
+          alert('Erreur : ' + error.message);
+        });
+    });
 
-function switchAuth(tab, el) {
-  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('form-'+tab).classList.add('active');
-}
-</script>
+    // Déconnexion
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      auth.signOut()
+        .then(() => {
+          alert('Vous êtes déconnecté.');
+        })
+        .catch((error) => {
+          alert('Erreur : ' + error.message);
+        });
+    });
+  </script>
 </body>
-</html>
+        </html>       
