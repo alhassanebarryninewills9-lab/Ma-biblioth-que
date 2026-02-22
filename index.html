@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ma Bibliothèque – Ensemble vers la lumière</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Firebase -->
+  <!-- Firebase (Auth + Firestore) -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
   <script>
     // 🔁 REMPLACEZ CES XXXXX PAR VOS VRAIES VALEURS (copiées depuis Firebase)
     const firebaseConfig = {
@@ -19,9 +20,11 @@
       appId: "XXXXX"
     };
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
   </script>
   <style>
-    /* Vos styles existants (je les ai conservés intégralement) */
+    /* Vos styles existants (identiques) */
     :root {
       --ink: #0f0a00;
       --parchment: #f5f0e8;
@@ -359,14 +362,14 @@
       box-shadow: 0 10px 30px rgba(201,162,39,0.1);
     }
     .contact-icon { font-size: 1.2rem; }
-    /* INSCRIPTION */
-    .inscription-section {
+    /* INSCRIPTION & CONNEXION */
+    .auth-section {
       background: var(--deep);
       border: 1px solid rgba(201,162,39,0.15);
       padding: 5rem 2rem;
       text-align: center;
     }
-    .inscription-section input {
+    .auth-section input {
       width: 100%;
       padding: 0.8rem;
       margin-bottom: 1rem;
@@ -376,11 +379,11 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 1rem;
     }
-    .inscription-section input:focus {
+    .auth-section input:focus {
       outline: none;
       border-color: var(--gold);
     }
-    .inscription-section button {
+    .auth-section button {
       width: 100%;
       padding: 1rem;
       background: transparent;
@@ -394,9 +397,35 @@
       transition: all 0.3s;
       margin-top: 0.5rem;
     }
-    .inscription-section button:hover {
+    .auth-section button:hover {
       background: var(--gold);
       color: var(--ink);
+    }
+    .toggle-link {
+      color: var(--gold);
+      cursor: pointer;
+      text-decoration: underline;
+      margin-top: 1rem;
+      display: inline-block;
+    }
+    /* ESPACE MEMBRE */
+    .member-section {
+      background: var(--deep);
+      border: 1px solid var(--gold);
+      padding: 3rem;
+      text-align: center;
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+    .member-section h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .member-section p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
     }
     /* FOOTER */
     footer {
@@ -475,7 +504,7 @@
       <li><a href="#espaces">Espaces</a></li>
       <li><a href="#activites">Activités</a></li>
       <li><a href="#contact">Contact</a></li>
-      <li><a href="#inscription">Inscription</a></li>
+      <li><a href="#auth">Espace membre</a></li>
     </ul>
   </nav>
 
@@ -578,21 +607,42 @@
     </section>
   </div>
 
-  <!-- INSCRIPTION -->
-  <div id="inscription" class="inscription-section">
+  <!-- AUTH SECTION (Inscription / Connexion / Espace membre) -->
+  <div id="auth" class="auth-section">
     <section style="max-width: 500px; margin: 0 auto;">
-      <div class="section-label">Rejoignez-nous</div>
-      <h2>Créez votre <span>compte</span></h2>
-      <form id="inscription-form">
-        <div style="display: flex; gap: 1rem;">
-          <input type="text" id="nom" placeholder="Nom" required>
-          <input type="text" id="prenom" placeholder="Prénom" required>
+      <!-- Affichage conditionnel selon que l'utilisateur est connecté ou non -->
+      <div id="nonConnecte">
+        <div class="section-label">Espace membre</div>
+        <h2><span id="formTitle">Inscription</span></h2>
+        <div id="inscriptionForm">
+          <form id="inscription-form">
+            <div style="display: flex; gap: 1rem;">
+              <input type="text" id="nom" placeholder="Nom" required>
+              <input type="text" id="prenom" placeholder="Prénom" required>
+            </div>
+            <input type="email" id="email" placeholder="E-mail" required>
+            <input type="password" id="password" placeholder="Mot de passe" required>
+            <input type="password" id="confirm-password" placeholder="Confirmer mot de passe" required>
+            <button type="button" id="create-btn">CRÉATEUR</button>
+          </form>
         </div>
-        <input type="email" id="email" placeholder="E-mail" required>
-        <input type="password" id="password" placeholder="Mot de passe" required>
-        <input type="password" id="confirm-password" placeholder="Confirmer mot de passe" required>
-        <button type="button" id="create-btn">CRÉATEUR</button>
-      </form>
+        <div id="connexionForm" style="display: none;">
+          <form id="login-form">
+            <input type="email" id="login-email" placeholder="E-mail" required>
+            <input type="password" id="login-password" placeholder="Mot de passe" required>
+            <button type="button" id="login-btn">SE CONNECTER</button>
+          </form>
+        </div>
+        <span class="toggle-link" id="toggleForm">Déjà un compte ? Connectez-vous</span>
+      </div>
+
+      <div id="connecte" style="display: none;">
+        <div class="member-section">
+          <h3>Bienvenue dans votre espace</h3>
+          <p id="welcomeMessage"></p>
+          <button id="logout-btn">SE DÉCONNECTER</button>
+        </div>
+      </div>
     </section>
   </div>
 
@@ -604,7 +654,7 @@
 
   <!-- SCRIPTS -->
   <script>
-    // Intersection Observer pour animations (optionnel)
+    // Intersection Observer pour animations (identique)
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -621,7 +671,60 @@
       observer.observe(el);
     });
 
-    // Gestionnaire du formulaire d'inscription avec Firebase
+    // Éléments DOM
+    const nonConnecte = document.getElementById('nonConnecte');
+    const connecte = document.getElementById('connecte');
+    const inscriptionForm = document.getElementById('inscriptionForm');
+    const connexionForm = document.getElementById('connexionForm');
+    const toggleLink = document.getElementById('toggleForm');
+    const formTitle = document.getElementById('formTitle');
+    const welcomeMsg = document.getElementById('welcomeMessage');
+
+    // État du formulaire (true = inscription, false = connexion)
+    let isInscription = true;
+
+    // Bascule entre inscription et connexion
+    toggleLink.addEventListener('click', () => {
+      isInscription = !isInscription;
+      if (isInscription) {
+        formTitle.textContent = 'Inscription';
+        inscriptionForm.style.display = 'block';
+        connexionForm.style.display = 'none';
+        toggleLink.textContent = 'Déjà un compte ? Connectez-vous';
+      } else {
+        formTitle.textContent = 'Connexion';
+        inscriptionForm.style.display = 'none';
+        connexionForm.style.display = 'block';
+        toggleLink.textContent = 'Pas encore de compte ? Inscrivez-vous';
+      }
+    });
+
+    // Gestion de l'authentification (observer l'état)
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // Utilisateur connecté
+        nonConnecte.style.display = 'none';
+        connecte.style.display = 'block';
+        // Récupérer le nom/prénom depuis Firestore
+        db.collection('users').doc(user.uid).get().then((doc) => {
+          if (doc.exists) {
+            const data = doc.data();
+            welcomeMsg.textContent = `Bonjour ${data.prenom} ${data.nom} ! Vous êtes connecté.`;
+          } else {
+            welcomeMsg.textContent = `Bonjour ! Vous êtes connecté.`;
+          }
+        }).catch(() => {
+          welcomeMsg.textContent = `Bonjour ! Vous êtes connecté.`;
+        });
+      } else {
+        // Utilisateur déconnecté
+        nonConnecte.style.display = 'block';
+        connecte.style.display = 'none';
+        // Réinitialiser les champs (optionnel)
+      }
+    });
+
+    // Inscription
     document.getElementById('create-btn').addEventListener('click', function() {
       const nom = document.getElementById('nom').value.trim();
       const prenom = document.getElementById('prenom').value.trim();
@@ -642,19 +745,54 @@
         return;
       }
 
-      // Création du compte avec Firebase
-      firebase.auth().createUserWithEmailAndPassword(email, password)
+      auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Succès
+          const user = userCredential.user;
+          // Enregistrer nom et prénom dans Firestore
+          return db.collection('users').doc(user.uid).set({
+            nom: nom,
+            prenom: prenom,
+            email: email
+          });
+        })
+        .then(() => {
           alert('Inscription réussie ! Bienvenue ' + prenom + ' ' + nom + ' !');
-          // Vous pourriez aussi enregistrer le nom/prénom dans la base de données (optionnel)
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          // Les champs seront vidés automatiquement grâce à onAuthStateChanged
         })
         .catch((error) => {
-          // Gestion des erreurs
+          alert('Erreur : ' + error.message);
+        });
+    });
+
+    // Connexion
+    document.getElementById('login-btn').addEventListener('click', function() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!email || !password) {
+        alert('Veuillez remplir tous les champs.');
+        return;
+      }
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          alert('Connexion réussie !');
+        })
+        .catch((error) => {
+          alert('Erreur : ' + error.message);
+        });
+    });
+
+    // Déconnexion
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      auth.signOut()
+        .then(() => {
+          alert('Vous êtes déconnecté.');
+        })
+        .catch((error) => {
           alert('Erreur : ' + error.message);
         });
     });
   </script>
 </body>
-  </html>
+    </html>
