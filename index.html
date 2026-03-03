@@ -12,6 +12,33 @@
 :root{--ink:#0f0a00;--parchment:#f5f0e8;--gold:#c9a227;--gold-light:#e8c84a;--deep:#1a0f00;--card-bg:rgba(255,255,255,0.03)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+  <script>
+function showPage(pageName) {
+  // cacher toutes les pages
+  document.querySelectorAllq('.page').forEach(page => {
+    page.classList.remove('active');
+  });
+
+  // afficher la bonne page
+  const target = document.getElementById('page-' + pageName);
+  if (target) {
+    target.classList.add('active');
+  }
+
+  // gérer le menu actif
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.classList.remove('active');
+  });
+
+  const navLink = document.getElementById('nav-' + pageName);
+  if (navLink) {
+    navLink.classList.add('active');
+  }
+}
+</script>
+
+
+
 body{background:var(--ink);color:var(--parchment);font-family:'Cormorant Garamond',serif;font-size:17px;overflow-x:hidden;min-height:100vh}
 
 /* NAV */
