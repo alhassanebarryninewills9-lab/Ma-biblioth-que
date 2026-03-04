@@ -12,6 +12,24 @@
 :root{--ink:#0f0a00;--parchment:#f5f0e8;--gold:#c9a227;--gold-light:#e8c84a;--deep:#1a0f00;--card-bg:rgba(255,255,255,0.03)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA43_ErWc6wbwU0EqI_kZFx9DUwbAW4OcY",
+  authDomain: "ma-bibli-50495.firebaseapp.com",
+  projectId: "ma-bibli-50495",
+  storageBucket: "ma-bibli-50495.firebasestorage.app",
+  messagingSenderId: "428346441752",
+  appId: "1:428346441752:web:c65f122d9d1959ed23036d",
+  measurementId: "G-NELWP9NVR3"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.inscription = function(email, password) {
 body{background:var(--ink);color:var(--parchment);font-family:'Cormorant Garamond',serif;font-size:17px;overflow-x:hidden;min-height:100vh}
 
 /* NAV */
