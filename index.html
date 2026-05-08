@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Ma Bibliothèque – Communauté numérique d'apprentissage collaboratif" />
+  <title>Ma Bibliothèque</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #000; color: #fff; font-family: 'Outfit', sans-serif; min-height: 100vh; }
+    #app { max-width: 430px; margin: 0 auto; min-height: 100vh; position: relative; overflow-x: hidden; }
+
+    /* HEADER */
+    .header { background: linear-gradient(135deg, #000 0%, #001a33 100%); border-bottom: 1px solid #0af; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .logo-wrap { display: flex; align-items: center; gap: 10; cursor: pointer; gap: 10px; }
+    .logo-img { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; border: 2px solid #0af; }
+    .logo-text { font-size: 15px; font-weight: 800; color: #fff; }
+    .logo-sub { font-size: 9px; color: #0af; letter-spacing: 2px; text-transform: uppercase; }
+    .menu-btn { background: none; border: none; cursor: pointer; color: #0af; font-size: 22px; padding: 4px; }
+
+    /* HERO */
+    .hero { background: linear-gradient(180deg, #001a33 0%, #000 60%); padding: 28px 20px 20px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,170,255,0.08) 0%, transparent 70%); pointer-events: none; }
+    .hero-badge { display: inline-block; background: rgba(0,170,255,0.15); border: 1px solid rgba(0,170,255,0.4); border-radius: 20px; padding: 4px 14px; font-size: 10px; color: #0af; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+    .hero h1 { font-size: 28px; font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 8px; }
+    .hero h1 span { color: #0af; }
+    .hero-slogan { font-size: 12px; color: rgba(255,255,255,0.5); font-style: italic; line-height: 1.6; margin-bottom: 24px; padding: 0 10px; }
+    .stats-row { display: flex; justify-content: center; gap: 24px; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 22px; font-weight: 800; color: #0af; }
+    .stat-label { font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* SECTION LABEL */
+    .section-label { font-size: 10px; font-weight: 700; color: #0af; letter-spacing: 3px; text-transform: uppercase; padding: 20px 20px 10px; }
+
+    /* SPACES GRID */
+    .spaces-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px 20px; }
+    .space-card { background: linear-gradient(135deg, #0a0a0a, #001122); border: 1px solid rgba(0,170,255,0.2); border-radius: 14px; padding: 16px 12px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: all 0.2s; }
+    .space-card:hover, .space-card:active { border-color: #0af; transform: translateY(-2px); }
+    .space-emoji { font-size: 26px; }
+    .space-name { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.3; }
+    .space-desc { font-size: 10px; color: rgba(255,255,255,0.4); line-height: 1.4; }
+    .space-count { font-size: 10px; color: #0af; font-weight: 600; }
+
+    /* POST CARD */
+    .post-card { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 16px; margin-bottom: 12px; position: relative; }
+    .post-card.pinned { border-color: rgba(0,170,255,0.4); }
+    .post-type-badge { display: inline-block; background: rgba(0,170,255,0.12); border: 1px solid rgba(0,170,255,0.3); border-radius: 6px; padding: 2px 8px; font-size: 9px; color: #0af; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .post-space-tag { font-size: 9px; color: rgba(255,255,255,0.25); margin-left: 6px; }
+    .post-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; line-height: 1.4; }
+    .post-content { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6; margin-bottom: 10px; }
+    .post-meta { display: flex; justify-content: space-between; }
+    .post-author { font-size: 10px; color: rgba(255,255,255,0.35); }
+    .post-date { font-size: 10px; color: rgba(255,255,255,0.25); }
+    .pin-badge { position: absolute; top: 12px; right: 12px; font-size: 13px; }
+
+    /* SPACE HEADER */
+    .space-header { background: linear-gradient(180deg, #001a33 0%, #000 100%); padding: 20px 20px 16px; }
+    .back-btn { background: none; border: none; cursor: pointer; color: #0af; font-size: 13px; padding: 0 0 12px; display: flex; align-items: center; gap: 6px; }
+    .space-header-emoji { font-size: 36px; margin-bottom: 8px; }
+    .space-header-title { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 6px; }
+    .space-header-sub { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.25); }
+    .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-state p { font-size: 13px; line-height: 1.6; }
+
+    /* BOTTOM NAV */
+    .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: rgba(0,0,0,0.95); border-top: 1px solid rgba(0,170,255,0.2); display: flex; justify-content: space-around; padding: 10px 0 18px; z-index: 200; backdrop-filter: blur(20px); }
+    .nav-btn { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; color: rgba(255,255,255,0.3); font-size: 20px; padding: 4px 16px; font-family: inherit; transition: color 0.2s; }
+    .nav-btn.active { color: #0af; }
+    .nav-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* MENU OVERLAY */
+    .menu-overlay { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; height: 100vh; background: rgba(0,0,0,0.97); z-index: 300; display: flex; flex-direction: column; overflow-y: auto; }
+    .menu-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,170,255,0.2); position: sticky; top: 0; background: #000; z-index: 10; }
+    .menu-title { font-size: 16px; font-weight: 800; color: #0af; }
+    .close-btn { background: none; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff; font-size: 16px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+    .menu-item { padding: 16px 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
+    .menu-item:active { background: rgba(0,170,255,0.05); }
+    .menu-item-icon { font-size: 22px; width: 32px; text-align: center; }
+    .menu-item-name { font-size: 14px; color: #fff; font-weight: 500; }
+    .menu-item-desc { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+    .menu-item-count { margin-left: auto; font-size: 11px; color: #0af; background: rgba(0,170,255,0.1); padding: 2px 8px; border-radius: 10px; flex-shrink: 0; }
+    .menu-contact { padding: 20px; border-top: 1px solid rgba(0,170,255,0.1); margin-top: 8px; }
+    .menu-contact-label { font-size: 10px; color: rgba(255,255,255,0.2); margin-bottom: 10px; letter-spacing: 1px; }
+    .menu-contact p { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 2.2; }
+
+    /* ADMIN */
+    .admin-hero { background: linear-gradient(135deg, #001a33, #000); padding: 24px 20px; text-align: center; border-bottom: 1px solid rgba(0,170,255,0.2); }
+    .admin-title { font-size: 18px; font-weight: 800; color: #0af; }
+    .admin-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+    .stats-admin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 16px 16px 0; }
+    .stat-card { background: #0a0a0a; border: 1px solid rgba(0,170,255,0.15); border-radius: 12px; padding: 12px 8px; text-align: center; }
+    .stat-card-num { font-size: 20px; font-weight: 800; color: #0af; }
+    .stat-card-label { font-size: 9px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+    .pub-btn { margin: 16px 16px 0; display: block; width: calc(100% - 32px); background: linear-gradient(135deg, #0af, #006699); border: none; border-radius: 14px; padding: 16px; color: #000; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .admin-space-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+    .admin-space-left { display: flex; align-items: center; gap: 10px; }
+    .admin-space-count { font-size: 11px; color: #0af; }
+    .admin-post-card { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px; margin-bottom: 8px; position: relative; }
+    .delete-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,50,50,0.1); border: 1px solid rgba(255,50,50,0.3); border-radius: 6px; color: #f55; font-size: 11px; padding: 3px 8px; cursor: pointer; font-family: inherit; }
+
+    /* MODAL */
+    .modal { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; height: 100vh; background: rgba(0,0,0,0.98); z-index: 400; overflow-y: auto; padding-bottom: 40px; }
+    .modal-header { padding: 20px 20px 16px; border-bottom: 1px solid rgba(0,170,255,0.2); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: #000; z-index: 10; }
+    .modal-title { font-size: 16px; font-weight: 800; color: #fff; }
+    .form-group { padding: 0 16px; margin-top: 16px; }
+    .form-label { font-size: 10px; color: #0af; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 6px; }
+    .form-input { width: 100%; background: #0a0a0a; border: 1px solid rgba(0,170,255,0.25); border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 13px; outline: none; font-family: inherit; }
+    .form-textarea { width: 100%; background: #0a0a0a; border: 1px solid rgba(0,170,255,0.25); border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 13px; outline: none; min-height: 120px; resize: vertical; font-family: inherit; }
+    .form-select { width: 100%; background: #0a0a0a; border: 1px solid rgba(0,170,255,0.25); border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 13px; outline: none; font-family: inherit; }
+    .form-error { font-size: 11px; color: #f55; margin-top: 6px; }
+    .form-submit { margin: 20px 16px 0; display: block; width: calc(100% - 32px); background: linear-gradient(135deg, #0af, #006699); border: none; border-radius: 12px; padding: 14px; color: #000; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .pinned-row { display: flex; align-items: center; gap: 8px; padding-top: 14px; }
+    .pinned-row input { width: 18px; height: 18px; accent-color: #0af; cursor: pointer; }
+    .pinned-row label { font-size: 12px; color: rgba(255,255,255,0.6); cursor: pointer; }
+
+    /* LOGIN */
+    .login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 0 24px; background: radial-gradient(ellipse at center, #001a33 0%, #000 70%); }
+    .login-icon { font-size: 56px; margin-bottom: 16px; }
+    .login-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .login-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 28px; text-align: center; }
+    .login-input { width: 100%; background: rgba(0,170,255,0.07); border: 1px solid rgba(0,170,255,0.3); border-radius: 12px; padding: 14px 16px; color: #fff; font-size: 14px; outline: none; margin-bottom: 12px; font-family: inherit; }
+    .login-btn { width: 100%; background: linear-gradient(135deg, #0af, #006699); border: none; border-radius: 12px; padding: 16px; color: #000; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; margin-top: 8px; }
+    .login-error { color: #f55; font-size: 12px; margin-bottom: 8px; text-align: center; }
+    .login-back { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 20px; font-family: inherit; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); background: #0af; color: #000; border-radius: 12px; padding: 12px 24px; font-weight: 700; font-size: 13px; z-index: 500; white-space: nowrap; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+    .hidden { display: none !important; }
+    .pb-100 { padding-bottom: 100px; }
+    .p-16 { padding: 16px; }
+    .deconnect-btn { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.35); font-size: 12px; font-family: inherit; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══════════════ LOGIN ADMIN ══════════════ -->
+  <div id="screen-login" class="hidden">
+    <div class="login-screen">
+      <div class="login-icon">🔐</div>
+      <h2 class="login-title">Espace Admin</h2>
+      <p class="login-sub">Connectez-vous pour gérer les contenus de Ma Bibliothèque</p>
+      <p id="login-error" class="login-error hidden"></p>
+      <input id="admin-pwd-input" class="login-input" type="password" placeholder="Mot de passe administrateur" />
+      <button class="login-btn" onclick="doLogin()">Accéder au tableau de bord</button>
+      <button class="login-back" onclick="showScreen('home')">← Retour à l'accueil</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ HOME ══════════════ -->
+  <div id="screen-home" class="hidden">
+    <div class="header">
+      <div class="logo-wrap" onclick="showScreen('home')">
+        <img class="logo-img" src="logo.jpg" alt="Ma Bibliothèque" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div style="display:none;width:38px;height:38px;border-radius:8px;border:2px solid #0af;background:rgba(0,170,255,0.1);align-items:center;justify-content:center;font-size:18px;">📚</div>
+        <div><div class="logo-text">Ma Bibliothèque</div><div class="logo-sub">Communauté du savoir</div></div>
+      </div>
+      <button class="menu-btn" onclick="openMenu()">☰</button>
+    </div>
+    <div class="hero">
+      <div class="hero-badge">✦ Communauté numérique ✦</div>
+      <h1>Ma <span>Biblio</span>thèque</h1>
+      <p class="hero-slogan">« Ensemble sortons des ténèbres de l'ignorance vers la lumière parfaite de la science »</p>
+      <div class="stats-row">
+        <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">Espaces</div></div>
+        <div class="stat-item"><div class="stat-num" id="home-total-posts">0</div><div class="stat-label">Publications</div></div>
+        <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">Savoir</div></div>
+      </div>
+    </div>
+    <div class="section-label">Nos espaces</div>
+    <div class="spaces-grid" id="home-spaces-grid"></div>
+    <div id="home-feed-section">
+      <div class="section-label">Dernières publications</div>
+      <div class="p-16 pb-100" id="home-feed"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SPACE DETAIL ══════════════ -->
+  <div id="screen-space" class="hidden">
+    <div class="header">
+      <div class="logo-wrap" onclick="showScreen('home')">
+        <img class="logo-img" src="logo.jpg" alt="Ma Bibliothèque" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div style="display:none;width:38px;height:38px;border-radius:8px;border:2px solid #0af;background:rgba(0,170,255,0.1);align-items:center;justify-content:center;font-size:18px;">📚</div>
+        <div><div class="logo-text">Ma Bibliothèque</div><div class="logo-sub">Communauté du savoir</div></div>
+      </div>
+      <button class="menu-btn" onclick="openMenu()">☰</button>
+    </div>
+    <div class="space-header" id="space-detail-header"></div>
+    <div class="p-16 pb-100" id="space-detail-posts"></div>
+  </div>
+
+  <!-- ══════════════ ADMIN ══════════════ -->
+  <div id="screen-admin" class="hidden">
+    <div class="header">
+      <div class="logo-wrap" onclick="showScreen('home')">
+        <img class="logo-img" src="logo.jpg" alt="Ma Bibliothèque" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+        <div style="display:none;width:38px;height:38px;border-radius:8px;border:2px solid #0af;background:rgba(0,170,255,0.1);align-items:center;justify-content:center;font-size:18px;">📚</div>
+        <div><div class="logo-text">Ma Bibliothèque</div><div class="logo-sub">Tableau de bord</div></div>
+      </div>
+      <button class="deconnect-btn" onclick="doLogout()">Déconnexion</button>
+    </div>
+    <div class="admin-hero">
+      <div class="admin-title">👨‍💼 Administration</div>
+      <div class="admin-sub">Gérez les contenus de tous les espaces</div>
+    </div>
+    <div class="stats-admin-grid" id="admin-stats"></div>
+    <button class="pub-btn" onclick="openPublishModal()">+ Nouvelle publication</button>
+    <div class="section-label">Gestion des espaces</div>
+    <div class="pb-100" id="admin-spaces-list"></div>
+  </div>
+
+  <!-- ══════════════ BOTTOM NAV ══════════════ -->
+  <div class="bottom-nav" id="bottom-nav">
+    <button class="nav-btn active" id="nav-home" onclick="showScreen('home')"><span>🏠</span><span class="nav-label">Accueil</span></button>
+    <button class="nav-btn" id="nav-spaces" onclick="openMenu()"><span>📖</span><span class="nav-label">Espaces</span></button>
+    <button class="nav-btn" id="nav-admin" onclick="goAdmin()"><span>⚙️</span><span class="nav-label">Admin</span></button>
+  </div>
+
+  <!-- ══════════════ MENU OVERLAY ══════════════ -->
+  <div id="menu-overlay" class="menu-overlay hidden">
+    <div class="menu-header">
+      <div class="menu-title">📚 Tous les espaces</div>
+      <button class="close-btn" onclick="closeMenu()">✕</button>
+    </div>
+    <div id="menu-spaces-list"></div>
+    <div class="menu-contact">
+      <div class="menu-contact-label">CONTACT</div>
+      <p>📱 +224 623 26 81 19<br/>📧 alhassanebarryninewills9@gmail.com</p>
+    </div>
+  </div>
+
+  <!-- ══════════════ PUBLISH MODAL ══════════════ -->
+  <div id="publish-modal" class="modal hidden">
+    <div class="modal-header">
+      <div class="modal-title">✍️ Nouvelle publication</div>
+      <button class="close-btn" onclick="closePublishModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Espace cible</label>
+      <select id="form-space" class="form-select"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Type de contenu</label>
+      <select id="form-type" class="form-select">
+        <option value="annonce">annonce</option>
+        <option value="résumé">résumé</option>
+        <option value="article">article</option>
+        <option value="débat">débat</option>
+        <option value="poème">poème</option>
+        <option value="ressource">ressource</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Titre</label>
+      <input id="form-title" class="form-input" placeholder="Titre de la publication..." />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contenu</label>
+      <textarea id="form-content" class="form-textarea" placeholder="Rédigez votre contenu ici..."></textarea>
+    </div>
+    <div class="form-group pinned-row">
+      <input type="checkbox" id="form-pinned" />
+      <label for="form-pinned">📌 Épingler cette publication</label>
+    </div>
+    <p id="form-error" class="form-error hidden" style="padding:0 16px;margin-top:8px;"></p>
+    <button class="form-submit" onclick="submitPost()">Publier maintenant →</button>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+</div>
+
+<script>
+  const ADMIN_PASSWORD = "MaBiblio2026";
+
+  const SPACES = [
+    { id: "lecteurs", icon: "📚", name: "Au bonheur des lecteurs", short: "Lectures", desc: "Lectures partagées entre membres" },
+    { id: "agora", icon: "🏛️", name: "L'Agora des curieux", short: "Agora", desc: "Débats et réflexions profondes" },
+    { id: "salon", icon: "🛋️", name: "Le salon des lecteurs", short: "Salon", desc: "Discussions libres et interactives" },
+    { id: "mots", icon: "✍️", name: "La maison des mots", short: "Mots", desc: "Expression écrite et littéraire" },
+    { id: "monde", icon: "🌍", name: "Librairie des perspectives mondiales", short: "Monde", desc: "Ouverture sur l'actualité internationale" },
+    { id: "slam", icon: "🎤", name: "Les voix du Slam", short: "Slam", desc: "Performances orales et poétiques" },
+    { id: "eclair", icon: "⚡", name: "Atelier éclair de savoir", short: "Éclair", desc: "Découvertes rapides et stimulantes" },
+    { id: "ecrivains", icon: "🖊️", name: "L'atelier des écrivains", short: "Écrivains", desc: "Accompagnement et création littéraire" },
+  ];
+
+  let posts = {
+    lecteurs: [{ id: 1, title: "Résumé : L'Aventure ambiguë", author: "Alhassane Barry", content: "Cheikh Hamidou Kane nous plonge dans le déchirement d'une Afrique entre tradition et modernité. Une œuvre d'une profondeur rare.", date: "7 mai 2026", type: "résumé", pinned: true }],
+    slam: [{ id: 2, title: "Soirée Slam – Sankaran #12", author: "Alhassane Barry", content: "La prochaine soirée slam aura lieu le 15 mai à l'Institut français. Inscriptions ouvertes pour les participants.", date: "6 mai 2026", type: "annonce", pinned: false }],
+    agora: [], salon: [], mots: [], monde: [], eclair: [], ecrivains: []
+  };
+
+  let isAdmin = false;
+  let currentSpace = null;
+  let activeAdminSpace = null;
+  let currentScreen = 'home';
+
+  // ── SCREENS ──
+  function showScreen(name) {
+    ['home','login','space','admin'].forEach(s => {
+      document.getElementById('screen-' + s).classList.add('hidden');
+    });
+    document.getElementById('screen-' + name).classList.remove('hidden');
+    document.getElementById('bottom-nav').classList.toggle('hidden', name === 'login');
+    currentScreen = name;
+    ['home','spaces','admin'].forEach(n => document.getElementById('nav-' + n).classList.remove('active'));
+    if (name === 'home') { document.getElementById('nav-home').classList.add('active'); renderHome(); }
+    if (name === 'admin') { document.getElementById('nav-admin').classList.add('active'); renderAdmin(); }
+    if (name === 'space') { document.getElementById('nav-spaces').classList.add('active'); }
+  }
+
+  function goAdmin() {
+    if (isAdmin) showScreen('admin');
+    else showScreen('login');
+  }
+
+  // ── LOGIN ──
+  function doLogin() {
+    const pwd = document.getElementById('admin-pwd-input').value;
+    const err = document.getElementById('login-error');
+    if (pwd === ADMIN_PASSWORD) {
+      isAdmin = true;
+      err.classList.add('hidden');
+      document.getElementById('admin-pwd-input').value = '';
+      showScreen('admin');
+    } else {
+      err.textContent = 'Mot de passe incorrect.';
+      err.classList.remove('hidden');
+    }
+  }
+  document.getElementById('admin-pwd-input').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  function doLogout() { isAdmin = false; showScreen('home'); }
+
+  // ── MENU ──
+  function openMenu() {
+    renderMenuSpaces();
+    document.getElementById('menu-overlay').classList.remove('hidden');
+  }
+  function closeMenu() { document.getElementById('menu-overlay').classList.add('hidden'); }
+
+  function renderMenuSpaces() {
+    const el = document.getElementById('menu-spaces-list');
+    el.innerHTML = SPACES.map(s => `
+      <div class="menu-item" onclick="openSpace('${s.id}')">
+        <span class="menu-item-icon">${s.icon}</span>
+        <div><div class="menu-item-name">${s.name}</div><div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">${s.desc}</div></div>
+        <span class="menu-item-count">${(posts[s.id]||[]).length}</span>
+      </div>`).join('');
+  }
+
+  // ── HOME ──
+  function renderHome() {
+    const allPosts = Object.values(posts).flat();
+    document.getElementById('home-total-posts').textContent = allPosts.length;
+
+    // Spaces grid
+    document.getElementById('home-spaces-grid').innerHTML = SPACES.map(s => `
+      <div class="space-card" onclick="openSpace('${s.id}')">
+        <div class="space-emoji">${s.icon}</div>
+        <div class="space-name">${s.name}</div>
+        <div class="space-desc">${s.desc}</div>
+        <div class="space-count">${(posts[s.id]||[]).length} publication${(posts[s.id]||[]).length !== 1 ? 's' : ''}</div>
+      </div>`).join('');
+
+    // Feed
+    const feedEl = document.getElementById('home-feed');
+    const feedSection = document.getElementById('home-feed-section');
+    if (allPosts.length === 0) { feedSection.classList.add('hidden'); return; }
+    feedSection.classList.remove('hidden');
+    const sorted = Object.entries(posts).flatMap(([sid, sp]) => sp.map(p => ({...p, spaceId: sid}))).sort((a,b) => b.id - a.id).slice(0, 6);
+    feedEl.innerHTML = sorted.map(post => {
+      const space = SPACES.find(s => s.id === post.spaceId);
+      return postCardHTML(post, space);
+    }).join('');
+  }
+
+  // ── SPACE ──
+  function openSpace(spaceId) {
+    closeMenu();
+    currentSpace = SPACES.find(s => s.id === spaceId);
+    document.getElementById('space-detail-header').innerHTML = `
+      <button class="back-btn" onclick="showScreen('home')">← Retour</button>
+      <div class="space-header-emoji">${currentSpace.icon}</div>
+      <div class="space-header-title">${currentSpace.name}</div>
+      <div class="space-header-sub">${currentSpace.desc}</div>`;
+    const sp = posts[spaceId] || [];
+    document.getElementById('space-detail-posts').innerHTML = sp.length === 0
+      ? `<div class="empty-state"><div class="icon">${currentSpace.icon}</div><p>Aucune publication pour le moment.<br>Revenez bientôt !</p></div>`
+      : sp.map(p => postCardHTML(p, currentSpace)).join('');
+    showScreen('space');
+  }
+
+  function postCardHTML(post, space) {
+    return `<div class="post-card ${post.pinned ? 'pinned' : ''}">
+      ${post.pinned ? '<div class="pin-badge">📌</div>' : ''}
+      <div>
+        <span class="post-type-badge">${post.type}</span>
+        ${space ? `<span class="post-space-tag">${space.icon} ${space.short}</span>` : ''}
+      </div>
+      <div class="post-title">${post.title}</div>
+      <div class="post-content">${post.content.length > 120 && currentScreen === 'home' ? post.content.slice(0,120) + '…' : post.content}</div>
+      <div class="post-meta"><span class="post-author">${post.author}</span><span class="post-date">${post.date}</span></div>
+    </div>`;
+  }
+
+  // ── ADMIN ──
+  function renderAdmin() {
+    const allPosts = Object.values(posts).flat();
+    document.getElementById('admin-stats').innerHTML = [
+      ['8','Espaces'], [allPosts.length,'Publi.'], [allPosts.filter(p=>p.pinned).length,'Épinglés'], ['∞','Savoir']
+    ].map(([n,l]) => `<div class="stat-card"><div class="stat-card-num">${n}</div><div class="stat-card-label">${l}</div></div>`).join('');
+
+    // Populate form-space select
+    const sel = document.getElementById('form-space');
+    sel.innerHTML = SPACES.map(s => `<option value="${s.id}">${s.icon} ${s.name}</option>`).join('');
+
+    document.getElementById('admin-spaces-list').innerHTML = SPACES.map(s => `
+      <div>
+        <div class="admin-space-row" onclick="toggleAdminSpace('${s.id}')">
+          <div class="admin-space-left">
+            <span style="font-size:20px">${s.icon}</span>
+            <span style="font-size:12px;color:#fff;font-weight:500">${s.short}</span>
+          </div>
+          <span class="admin-space-count">${(posts[s.id]||[]).length} pub. <span id="arrow-${s.id}">▼</span></span>
+        </div>
+        <div id="admin-space-posts-${s.id}" class="hidden" style="padding:8px 16px 4px">
+          ${renderAdminSpacePosts(s.id)}
+        </div>
+      </div>`).join('');
+  }
+
+  function renderAdminSpacePosts(spaceId) {
+    const sp = posts[spaceId] || [];
+    if (sp.length === 0) return `<div style="font-size:11px;color:rgba(255,255,255,0.25);text-align:center;padding:12px 0">Aucune publication</div>`;
+    return sp.map(p => `
+      <div class="admin-post-card">
+        <button class="delete-btn" onclick="deletePost('${spaceId}', ${p.id})">Supprimer</button>
+        <div style="font-size:9px;color:#0af;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">${p.type} ${p.pinned?'📌':''}</div>
+        <div style="font-size:13px;color:#fff;font-weight:600;padding-right:70px;margin-bottom:4px">${p.title}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4)">${p.date}</div>
+      </div>`).join('');
+  }
+
+  function toggleAdminSpace(spaceId) {
+    const el = document.getElementById('admin-space-posts-' + spaceId);
+    const arrow = document.getElementById('arrow-' + spaceId);
+    const isOpen = !el.classList.contains('hidden');
+    el.classList.toggle('hidden');
+    arrow.textContent = isOpen ? '▼' : '▲';
+  }
+
+  function deletePost(spaceId, postId) {
+    posts[spaceId] = (posts[spaceId]||[]).filter(p => p.id !== postId);
+    renderAdmin();
+  }
+
+  // ── PUBLISH ──
+  function openPublishModal() { document.getElementById('publish-modal').classList.remove('hidden'); }
+  function closePublishModal() {
+    document.getElementById('publish-modal').classList.add('hidden');
+    document.getElementById('form-error').classList.add('hidden');
+  }
+
+  function submitPost() {
+    const title = document.getElementById('form-title').value.trim();
+    const content = document.getElementById('form-content').value.trim();
+    const spaceId = document.getElementById('form-space').value;
+    const type = document.getElementById('form-type').value;
+    const pinned = document.getElementById('form-pinned').checked;
+    const errEl = document.getElementById('form-error');
+
+    if (!title || !content) { errEl.textContent = 'Titre et contenu sont requis.'; errEl.classList.remove('hidden'); return; }
+    errEl.classList.add('hidden');
+
+    const newPost = { id: Date.now(), title, content, author: 'Administrateur', date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }), type, pinned };
+    if (!posts[spaceId]) posts[spaceId] = [];
+    posts[spaceId].unshift(newPost);
+
+    document.getElementById('form-title').value = '';
+    document.getElementById('form-content').value = '';
+    document.getElementById('form-pinned').checked = false;
+    closePublishModal();
+    renderAdmin();
+    showToast('✓ Publication ajoutée avec succès !');
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    setTimeout(() => t.classList.add('hidden'), 2500);
+  }
+
+  // ── INIT ──
+  showScreen('home');
+</script>
+</body>
+</html>
